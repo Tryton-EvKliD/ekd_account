@@ -1,0 +1,1 @@
+/home/trytond-1.8.2/trytond/modules/ekd_account/ekd_doc_payment.py
