@@ -1,1 +1,621 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_account.xml
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+        <record model="res.group" id="group_ekd_account">
+            <field name="name">Account_</field>
+        </record>
+        <record model="res.group" id="group_ekd_account_admin">
+            <field name="name">Administration Account_ </field>
+        </record>
+        <record model="res.user" id="res.user_admin">
+            <field name="groups"
+                eval="[('add', ref('group_ekd_account')), ('add', ref('group_ekd_account_admin'))]"/>
+        </record>
+        <record model="res.group" id="group_pay_documents_confirm">
+            <field name="name">Confirm payment of documents</field>
+        </record>
+
+        <record model="res.group" id="group_documents_confirm">
+            <field name="name">Confirm documents</field>
+        </record>
+
+        <record model="res.group" id="group_account_cash_revenue">
+            <field name="name">Account (Cash Revenue)</field>
+        </record>
+        <record model="res.group" id="group_account_bank_revenue">
+            <field name="name">Account (Bank Revenue)</field>
+        </record>
+
+        <record model="res.group" id="group_account_payment">
+            <field name="name">Account (Payment)</field>
+        </record>
+        <record model="res.group" id="group_account_cash_payment">
+            <field name="name">Account (Cash Payment)</field>
+        </record>
+        <record model="res.group" id="group_account_bank_payment">
+            <field name="name">Account (Bank Payment)</field>
+        </record>
+        <record model="res.group" id="group_account_supplier_payment">
+            <field name="name">Account (Supplier Payment)</field>
+        </record>
+        <record model="res.group" id="group_account_customer_received">
+            <field name="name">Account (Customer Received)</field>
+        </record>
+        <record model="res.group" id="group_account_other_party_received">
+            <field name="name">Account (Other Party)</field>
+        </record>
+        <record model="res.group" id="group_account_person">
+            <field name="name">Account (Person)</field>
+        </record>
+
+        <menuitem name="Financial Management RU" id="menu_ekd_account" sequence="10"
+            groups="group_ekd_account,group_ekd_account_admin"
+            icon="tryton-calculator"/>
+        <menuitem name="Configuration" parent="menu_ekd_account"
+            id="menu_ekd_account_configuration" groups="group_ekd_account_admin"
+            sequence="1" icon="tryton-preferences"/>
+        <menuitem name="General Chart of Account" parent="menu_ekd_account_configuration"
+            id="menu_general_ekd_account_configuration"/>
+        <menuitem name="Entries" parent="menu_ekd_account"
+            id="menu_ekd_entries" sequence="30"/>
+        <menuitem name="Turnover Statements" parent="menu_ekd_account"
+            id="menu_ekd_statement" sequence="40"/>
+        <menuitem name="Processing" parent="menu_ekd_account"
+            id="menu_ekd_processing" sequence="50"/>
+<!-->
+        <menuitem name="Documents for payment" parent="ekd_documents.menu_documents"
+            id="menu_document_pay" sequence="10" groups="group_account_cash_payment,group_account_bank_payment"/>
+
+        <menuitem name="Accounting Sections" parent="menu_ekd_account"
+            id="menu_ekd_account_section" groups="group_ekd_account"
+            sequence="10" icon="tryton-preferences"/>
+<-->
+        <menuitem name="Reporting" parent="menu_ekd_account"
+            id="menu_ekd_reporting" sequence="60"/>
+
+
+        <record model="ir.ui.view" id="view_ekd_account_type_template_form">
+            <field name="model">ekd.account.type.template</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Account Type Template">
+                    <label name="name"/>
+                    <field name="name"/>
+                    <label name="code"/>
+                    <field name="code"/>
+                    <label name="sequence"/>
+                    <field name="sequence"/>
+                    <label name="parent"/>
+                    <field name="parent"/>
+                    <newline/>
+                    <label name="type_balance"/>
+                    <field name="type_balance"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_ekd_account_type_template_tree">
+            <field name="model">ekd.account.type.template</field>
+            <field name="type">tree</field>
+            <field name="field_childs">childs</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Account Types Templates" >
+                    <field name="name" select="1"/>
+                    <field name="code"/>
+                </tree>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.action.act_window" id="act_ekd_account_type_template_tree">
+            <field name="name">Account Type Templates</field>
+            <field name="res_model">ekd.account.type.template</field>
+            <field name="view_type">tree</field>
+            <field name="domain">[('parent', '=', False)]</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="view_act_ekd_account_type_template_tree1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="view_ekd_account_type_template_tree"/>
+            <field name="act_window" ref="act_ekd_account_type_template_tree"/>
+        </record>
+        <menuitem parent="menu_general_ekd_account_configuration"
+            action="act_ekd_account_type_template_tree"
+            id="menu_ekd_account_type_template_tree"/>
+
+        <record model="ir.ui.view" id="view_ekd_account_type_form">
+            <field name="model">ekd.account.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Account Type">
+                    <label name="name"/>
+                    <field name="name"/>
+                    <label name="code"/>
+                    <field name="code"/>
+                    <label name="sequence"/>
+                    <field name="sequence"/>
+                    <label name="company"/>
+                    <field name="company"/>
+                    <label name="parent"/>
+                    <field name="parent"/>
+                    <label name="type_balance"/>
+                    <field name="type_balance"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_ekd_account_type_tree">
+            <field name="model">ekd.account.type</field>
+            <field name="type">tree</field>
+            <field name="field_childs">childs</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Account Types">
+                    <field name="name" select="1"/>
+                    <field name="code"/>
+                </tree>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.action.act_window" id="act_ekd_account_type_form">
+            <field name="name">Account Types RU</field>
+            <field name="res_model">ekd.account.type</field>
+            <field name="view_type">form</field>
+        </record>
+        <record model="ir.action.act_window.view" id="view_act_ekd_account_type_form1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="view_ekd_account_type_tree"/>
+            <field name="act_window" ref="act_ekd_account_type_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="view_act_ekd_account_type_form2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="view_ekd_account_type_form"/>
+            <field name="act_window" ref="act_ekd_account_type_form"/>
+        </record>
+        <menuitem parent="menu_general_ekd_account_configuration"
+            action="act_ekd_account_type_form" id="menu_ekd_account_type_form"/>
+        <record model="ir.action.act_window" id="act_ekd_account_type_tree">
+            <field name="name">Account Types RU</field>
+            <field name="res_model">ekd.account.type</field>
+            <field name="view_type">tree</field>
+            <field name="domain">[('parent', '=', False)]</field>
+        </record>
+        <record model="ir.action.act_window.view" id="view_act_ekd_account_type_tree1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="view_ekd_account_type_tree"/>
+            <field name="act_window" ref="act_ekd_account_type_tree"/>
+        </record>
+        <menuitem parent="menu_ekd_account_type_form"
+            action="act_ekd_account_type_tree" id="menu_ekd_account_type_tree"/>
+        <record model="ir.model.access" id="access_ekd_account_type">
+            <field name="model" search="[('model', '=', 'ekd.account.type')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_ekd_account_type_account_admin">
+            <field name="model" search="[('model', '=', 'ekd.account.type')]"/>
+            <field name="group" ref="group_ekd_account_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.ui.view" id="view_ekd_account_template_form">
+            <field name="model">ekd.account.template</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Account Template" col="6">
+                    <label name="name"/>
+                    <field name="name"/>
+                    <label name="code"/>
+                    <field name="code"/>
+                    <label name="parent"/>
+                    <field name="parent"/>
+                    <label name="kind"/>
+                    <field name="kind"/>
+                    <label name="type_balance"/>
+                    <field name="type_balance"/>
+                    <label name="kind_analytic"/>
+                    <field name="kind_analytic"/>
+                    <label name="type"/>
+                    <field name="type"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_ekd_account_template_tree">
+            <field name="model">ekd.account.template</field>
+            <field name="type">tree</field>
+            <field name="field_childs">childs</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Account Templates">
+                    <field name="rec_name" select="1"/>
+                    <field name="kind_analytic"/>
+                    <field name="type" select="1"/>
+                </tree>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.action.act_window" id="act_ekd_account_template_tree">
+            <field name="name">Account Templates RU</field>
+            <field name="res_model">ekd.account.template</field>
+            <field name="view_type">tree</field>
+            <field name="domain">[('parent', '=', False)]</field>
+        </record>
+        <record model="ir.action.act_window.view" id="view_act_ekd_account_template_tree1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="view_ekd_account_template_tree"/>
+            <field name="act_window" ref="act_ekd_account_template_tree"/>
+        </record>
+        <menuitem parent="menu_general_ekd_account_configuration"
+            action="act_ekd_account_template_tree" id="menu_ekd_account_template_tree"/>
+
+        <record model="ir.model.access" id="access_ekd_account_template">
+            <field name="model" search="[('model', '=', 'ekd.account.template')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+        <record model="ir.ui.view" id="ekd_account_create_chart_account_init_view_form">
+            <field name="model">ekd.account.create_chart_account.init</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Create Chart of Account" col="2">
+                    <image name="tryton-dialog-information"/>
+                    <group col="1" id="labels">
+                        <label string="You can now create a chart of account for your company"
+                            align="0.0" id="create"/>
+                        <label string="by selecting a chart of account template."
+                            align="0.0" id="selecting"/>
+                    </group>
+                </form>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ekd_account_create_chart_account_account_view_form">
+            <field name="model">ekd.account.create_chart_ekd.account</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Create Chart of Account" col="2">
+                    <label name="company"/>
+                    <field name="company"/>
+                    <label name="account_template"/>
+                    <field name="account_template"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ekd_account_create_chart_account_properties_view_form">
+            <field name="model">ekd.account.create_chart_account.properties</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Create Default Properties" col="2">
+                    <label name="account_receivable"/>
+                    <field name="account_receivable"/>
+                    <label name="account_payable"/>
+                    <field name="account_payable"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.action.wizard" id="wizard_create_chart_ekd_account">
+            <field name="name">Create Chart of Account from Template</field>
+            <field name="wiz_name">ekd.account.create_chart_account</field>
+        </record>
+        <menuitem parent="menu_general_ekd_account_configuration"
+            action="wizard_create_chart_ekd_account" id="menu_create_chart_ekd_account"/>
+        <record model="ir.module.module.config_wizard.item"
+            id="config_wizard_item_chart_ekd_account">
+            <field name="name">ekd.account.create_chart_account</field>
+        </record>
+
+        <record model="ir.ui.view" id="ekd_account_update_chart_account_init_view_form">
+            <field name="model">ekd.account.update_chart_account.init</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Update Chart of Account" col="2">
+                    <label name="account"/>
+                    <field name="account"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ekd_account_update_chart_account_start_view_form">
+            <field name="model">ekd.account.update_chart_account.start</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Update Chart of Account">
+                    <label string="Update Chart of Account Succeed!" id="succeed"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.action.wizard" id="wizard_update_chart_ekd_account">
+            <field name="name">Update Chart of Account RU from Template</field>
+            <field name="wiz_name">ekd.account.update_chart_account</field>
+        </record>
+        <menuitem parent="menu_general_ekd_account_configuration"
+            action="wizard_update_chart_ekd_account" id="menu_update_chart_ekd_account"/>
+
+        <record model="ir.ui.view" id="view_ekd_account_form">
+            <field name="model">ekd.account</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Account" col="6">
+                    <label name="name"/>
+                    <field name="name"/>
+                    <label name="code"/>
+                    <field name="code"/>
+                    <label name="active"/>
+                    <field name="active" xexpand="0" width="100"/>
+                    <notebook colspan="6">
+                        <page string="General Information" id="general">
+                            <label name="company"/>
+                            <field name="company"/>
+                            <label name="parent"/>
+                            <field name="parent"/>
+                            <label name="kind"/>
+                            <field name="kind"/>
+                            <label name="type_balance"/>
+                            <field name="type_balance"/>
+                            <label name="kind_analytic"/>
+                            <field name="kind_analytic"/>
+                            <label name="root_analytic"/>
+                            <field name="root_analytic"/>
+                            <label name="currency"/>
+                            <field name="currency"/>
+                            <label name="icon"/>
+                            <field name="icon"/>
+                            <label name="second_currency"/>
+                            <field name="second_currency"/>
+                            <label name="move_balance"/>
+                            <field name="move_balance"/>
+                        </page>
+                        <page string="Analytic Accounts" id="analytic">
+                            <label name="control_analytic"/>
+                            <field name="control_analytic"/>
+                            <label name="side_analytic"/>
+                            <field name="side_analytic"/>
+                            <newline/>
+                            <field colspan="2" name="level_analytic">
+                                <tree>
+                                    <field name="level"/>
+                                    <field name="name"/>
+                                    <field name="ref_analytic"/>
+                                    <field name="move_balance"/>
+                                    <field name="side" tree_invisible="1"/>
+                                </tree>
+                                <form>
+                                    <field name="side" invisible="1"/>
+                                    <group colspan="4" col="6" id="analytic">
+                                        <label name="level"/>
+                                        <field name="level"/>
+                                        <label name="name"/>
+                                        <field colspan="3" name="name"/>
+                                    </group>
+                                    <label name="ref_analytic"/>
+                                    <field name="ref_analytic"/>
+                                    <newline/>
+                                    <label name="move_balance"/>
+                                    <field name="move_balance"/>
+                                    <label name="domain"/>
+                                    <field name="domain"/>
+                                    <label name="collapse_balance"/>
+                                    <field name="collapse_balance"/>
+                                </form>
+                            </field>
+                            <field colspan="2" name="level_analytic_ct">
+                                <tree>
+                                    <field name="level"/>
+                                    <field name="name"/>
+                                    <field name="ref_analytic"/>
+                                    <field name="move_balance"/>
+                                    <field name="side" tree_invisible="1"/>
+                                </tree>
+                                <form>
+                                    <field name="side" invisible="1"/>
+                                    <group colspan="4" col="6" id="analytic">
+                                        <label name="level"/>
+                                        <field name="level"/>
+                                        <label name="name"/>
+                                        <field colspan="3" name="name"/>
+                                    </group>
+                                    <label name="ref_analytic"/>
+                                    <field name="ref_analytic"/>
+                                    <newline/>
+                                    <label name="move_balance"/>
+                                    <field name="move_balance"/>
+                                    <label name="collapse_balance"/>
+                                    <field name="collapse_balance"/>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Controls" id="controls">
+                            <group string="Corresponds with Credit of Account" id="corr_debit">
+                                <field name="corr_debit" height="300"/>
+                            </group>
+                            <group string="Corresponds with Debit of Account" id="corr_credit">
+                                <field name="corr_credit" height="300"/>
+                            </group>
+                        </page>
+<!-->
+
+                        <page string="Consolidation" id="consolidation">
+                            <field name="child_consol_ids"/>
+                        </page>
+<-->
+                        <page string="Notes" id="notes">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </form>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_ekd_account_tree">
+            <field name="model">ekd.account</field>
+            <field name="type">tree</field>
+            <field name="field_childs">childs</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Accounts" toolbar="1">
+                    <field name="code" icon="icon"/>
+                    <field name="name" />
+                    <field name="company"/>
+                    <field name="kind"/>
+                    <field name="type_balance"/>
+                    <field name="kind_analytic"/>
+                    <field name="currency" tree_invisible="1"/>
+                    <field name="currency_digits" tree_invisible="1"/>
+                </tree>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.action.act_window" id="act_ekd_account_form">
+            <field name="name">Accounts</field>
+            <field name="res_model">ekd.account</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('company', '=', Get( Eval('context', {}), 'company', False))]</field>
+        </record>
+        <record model="ir.action.act_window.view" id="view_act_ekd_account_form1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="view_ekd_account_tree"/>
+            <field name="act_window" ref="act_ekd_account_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="view_act_account_form2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="view_ekd_account_form"/>
+            <field name="act_window" ref="act_ekd_account_form"/>
+        </record>
+
+        <menuitem parent="menu_general_ekd_account_configuration"
+            action="act_ekd_account_form" id="menu_ekd_account_form"/>
+
+        <record model="ir.action.act_window" id="act_ekd_account_tree">
+            <field name="name">Structure Chart of Accounts</field>
+            <field name="res_model">ekd.account</field>
+            <field name="view_type">tree</field>
+            <field name="domain">[('company', '=', Get( Eval('context', {}), 'company', False)), ('parent', '=', False)]</field>
+        </record>
+        <record model="ir.action.act_window.view" id="view_act_ekd_account_tree1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="view_ekd_account_tree"/>
+            <field name="act_window" ref="act_ekd_account_tree"/>
+        </record>
+        <menuitem parent="menu_ekd_account_form"
+            action="act_ekd_account_tree" id="menu_ekd_account_tree"/>
+
+        <record model="ir.ui.view" id="view_ekd_account_tree2">
+            <field name="model">ekd.account</field>
+            <field name="type">tree</field>
+            <field name="field_childs">childs</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Accounts">
+                    <field name="code" icon="icon"/>
+                    <field name="name"/>
+                    <field name="balance_dt"/>
+                    <field name="balance_ct"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="balance_dt_end"/>
+                    <field name="balance_ct_end"/>
+                    <field name="company"  tree_invisible="1"/>
+                    <field name="currency" tree_invisible="1"/>
+                    <field name="currency_digits" tree_invisible="1"/>
+                    <field name="active" tree_invisible="1"/>
+                </tree>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.action.act_window" id="act_ekd_account_tree2">
+            <field name="name">Turnover Statement of Chart Accounts</field>
+            <field name="res_model">ekd.account</field>
+            <field name="view_type">tree</field>
+            <field name="domain">[('parent', '=', False),('company', '=', Get( Eval('context', {}), 'company', False))]</field>
+        </record>
+        <record model="ir.action.act_window.view" id="view_act_account_tree2">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="view_ekd_account_tree2"/>
+            <field name="act_window" ref="act_ekd_account_tree2"/>
+        </record>
+        <record model="ir.action.wizard" id="act_open_chart_ekd_account1">
+            <field name="name">Turnover Statement of Accounts</field>
+            <field name="wiz_name">ekd.account.open_chart_account</field>
+        </record>
+
+        <menuitem parent="menu_ekd_statement" action="act_open_chart_ekd_account1"
+            icon="tryton-tree" id="menu_open_chart_ekd_account1"/>
+
+        <record model="ir.model.access" id="access_ekd_account">
+            <field name="model" search="[('model', '=', 'ekd.account')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+        <record model="ir.model.access" id="access_ekd_account_admin">
+            <field name="model" search="[('model', '=', 'ekd.account')]"/>
+            <field name="group" ref="group_ekd_account_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_ekd_account">
+            <field name="model" search="[('model', '=', 'ekd.account')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_ekd_account">
+            <field name="field" search="[('name', '=', 'company'), ('model.model', '=', 'ekd.account')]"/>
+            <field name="operator">in</field>
+            <field name="operand">User/Current Companies</field>
+            <field name="rule_group" ref="rule_group_ekd_account"/>
+        </record>
+
+        <record model="ir.ui.view" id="open_chart_ekd_account_init_view_form">
+            <field name="model">ekd.account.open_chart_account.init</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Open Balance of Accounts" col="4">
+                    <label name="company"/>
+                    <field name="company"/>
+                    <label name="fiscalyear"/>
+                    <field name="fiscalyear"/>
+                    <label name="period_start"/>
+                    <field name="period_start"/>
+                    <label name="period_end"/>
+                    <field name="period_end"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+
+    </data>
+</tryton>

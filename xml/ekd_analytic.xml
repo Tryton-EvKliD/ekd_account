@@ -1,1 +1,205 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_analytic.xml
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+        <record model="res.group" id="group_ekd_analytic_admin">
+            <field name="name">Administration Analytic</field>
+        </record>
+
+        <menuitem name="Analytic Account" parent="ekd_account.menu_ekd_account_configuration"
+            id="menu_analytic_account_configuration"/>
+
+        <record model="ir.ui.view" id="account_analytic_view_form">
+            <field name="model">ekd.account.analytic</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Analytic Account" col="6">
+                    <label name="name"/>
+                    <field name="name"/>
+                    <label name="code"/>
+                    <field name="code"/>
+                    <label name="active"/>
+                    <field name="active" xexpand="0" width="100"/>
+                    <notebook colspan="6">
+                        <page string="General Information" id="general">
+                            <label name="type"/>
+                            <field name="type"/>
+                            <label name="kind_analytic"/>
+                            <field name="kind_analytic"/>
+<!-->
+                            <label name="display_balance"/>
+                            <field name="display_balance"/>
+                            <label name="company"/>
+                            <field name="company"/>
+                            <label name="currency"/>
+                            <field name="currency"/>
+                            <label name="mandatory"/>
+                            <field name="mandatory"/>
+<-->
+                            <label name="root"/>
+                            <field name="root"/>
+                            <label name="parent"/>
+                            <field name="parent"/>
+                            <label name="model_ref"/>
+                            <field name="model_ref"/>
+                        </page>
+                        <page string="Consolidation" id="consolidation">
+                            <field name="child_consol_ids"/>
+                        </page>
+                        <page string="Notes" id="notes">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                    <group colspan="6" col="2" id="state">
+                        <label name="state"/>
+                        <field name="state"/>
+                    </group>
+                </form>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="account_analytic_view_tree">
+            <field name="model">ekd.account.analytic</field>
+            <field name="type">tree</field>
+            <field name="field_childs">childs</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Analytic Accounts">
+                    <field name="code" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="company" select="2"/>
+                    <field name="type" select="2"/>
+                    <field name="model_ref"/>
+                    <field name="rec_name"/>
+                    <field name="active" select="2" tree_invisible="1"/>
+                </tree>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.action.act_window" id="act_account_analytic_form">
+            <field name="name">Analytic Accounts</field>
+            <field name="res_model">ekd.account.analytic</field>
+            <field name="domain">[('company', '=', Get( Eval('context', {}), 'company', False))]</field>
+            <field name="view_type">form</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_account_analytic_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="account_analytic_view_tree"/>
+            <field name="act_window" ref="act_account_analytic_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_account_analytic_form_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="account_analytic_view_form"/>
+            <field name="act_window" ref="act_account_analytic_form"/>
+        </record>
+
+        <menuitem parent="menu_analytic_account_configuration"
+            action="act_account_analytic_form" id="menu_account_analytic_form"/>
+
+        <record model="ir.action.act_window" id="act_account_analytic_tree">
+            <field name="name">Analytic Accounts</field>
+            <field name="res_model">ekd.account.analytic</field>
+            <field name="view_type">tree</field>
+            <field name="domain">[('company', '=', Get( Eval('context', {}), 'company', False)), ('parent', '=', False)]</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_account_analytic_tree_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="account_analytic_view_tree"/>
+            <field name="act_window" ref="act_account_analytic_tree"/>
+        </record>
+
+        <menuitem parent="menu_account_analytic_form"
+            action="act_account_analytic_tree" id="menu_account_analytic_tree"/>
+
+        <record model="ir.ui.view" id="account_analytic_view_tree2">
+            <field name="model">ekd.account.analytic</field>
+            <field name="type">tree</field>
+            <field name="field_childs">childs</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Analytic Accounts">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="balance"/>
+                    <field name="currency"/>
+                    <field name="currency_digits" tree_invisible="1"/>
+                </tree>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.action.act_window" id="act_account_analytic_tree2">
+            <field name="name">Struct Analytic Accounts</field>
+            <field name="res_model">ekd.account.analytic</field>
+            <field name="view_type">tree</field>
+            <field name="domain">[('company', '=', Get( Eval('context', {}), 'company', False)), ('parent', '=', False)]</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_account_analytic_tree2_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="account_analytic_view_tree2"/>
+            <field name="act_window" ref="act_account_analytic_tree2"/>
+        </record>
+        <record model="ir.action.wizard" id="act_open_chart_account_analytic">
+            <field name="name">Turnover Statement of Analytic Accounts</field>
+            <field name="wiz_name">ekd.account.analytic.open_turnover_analytic</field>
+        </record>
+
+        <menuitem parent="ekd_account.menu_ekd_statement" action="act_open_chart_account_analytic"
+            icon="tryton-tree" id="menu_open_chart_account_analytic"/>
+
+        <record model="ir.model.access" id="access_analytic_ekd_account">
+            <field name="model" search="[('model', '=', 'ekd.account.analytic')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_analytic_ekd_account_account_admin">
+            <field name="model" search="[('model', '=', 'ekd.account.analytic')]"/>
+            <field name="group" ref="group_ekd_analytic_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_analytic_account">
+            <field name="model" search="[('model', '=', 'ekd.account.analytic')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_analytic_account1">
+            <field name="field" search="[('name', '=', 'company'), ('model.model', '=', 'ekd.account.analytic')]"/>
+            <field name="operator">in</field>
+            <field name="operand">User/Current Companies</field>
+            <field name="rule_group" ref="rule_group_analytic_account"/>
+        </record>
+
+        <record model="ir.ui.view" id="open_chart_account_init_view_form">
+            <field name="model">ekd.account.analytic.open_turnover_analytic.init</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Open Turnovers of Analytic Accounts" col="4">
+                    <label name="account"/>
+                    <field name="account"/>
+                    <label name="level_analytic"/>
+                    <field name="level_analytic"/>
+                    <label name="current_period"/>
+                    <field colspan="3" name="current_period"/>
+                    <newline/>
+                    <label name="start_date"/>
+                    <field name="start_date"/>
+                    <label name="end_date"/>
+                    <field name="end_date"/>
+                    <label name="as_tree"/>
+                    <field name="as_tree"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+    </data>
+</tryton>

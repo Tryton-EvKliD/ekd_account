@@ -1,1 +1,261 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_move_recycle.xml
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--
+      Формы для бухгалтерии
+      1. Форма хоз.операции
+      2. Реестр хоз.операции
+                    <field name="document_id"/>
+
+    -->
+
+    <!--
+         Entries lines - Строки проводок
+    -->
+     <record id="view_move_lines_ru_recycle_tree" model="ir.ui.view">
+            <field name="name">account.move.lines.ru.recycle.tree</field>
+             <field name="model">account.move.lines.ru</field>
+            <field name="type">tree</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Account Entry Lines" editable="top">
+                    <field name="move_id"/>
+                    <field name="company" select="1"/>
+                    <field name="period_id" select="1"/>
+                    <field name="date_transaction" select="1"/>
+                    <field name="dt_account_id" domain="[('company', '=', company),('type','&lt;&gt;','view'), ('type', '&lt;&gt;', 'closed')]"  select="1"/>
+                    <field name="dt_analytic_id"  select="2"/>
+                    <field name="dt_partner_id"  select="1"/>
+                    <field name="ct_account_id" domain="[('company', '=', company),('type','&lt;&gt;','view'), ('type', '&lt;&gt;', 'closed')]" select="1"/>
+                    <field name="ct_analytic_id" select="2"/>
+                    <field name="ct_partner_id" select="1"/>
+                    <field name="product_id" domain="[('company', '=', company),]" select="2"/>
+                    <field name="product_uom_id"/>
+                    <field name="quantity"/>
+                    <field name="amount" select="1"/>
+                    <field name="amount_currency"/>
+                    <field name="currency_id"/>
+                    <field name="state" readonly="1"/>
+                </tree>
+            </field>
+    </record>
+
+    <record id="view_move_lines_ru_recycle_form" model="ir.ui.view">
+            <field name="name">account.move.lines.ru.recycle.form</field>
+            <field name="model">account.move.lines.ru</field>
+            <field name="type">form</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Account Entry Lines">
+                    <group col="8" colspan="6">
+                        <field colspan="4" name="move_id"/>
+                        <field colspan="2" name="company"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator colspan="2" string="Account debit"/>
+                        <field name="dt_account_id" domain="[('company', '=', company)]"/>
+                        <field name="dt_analytic_id"/>
+                        <field name="dt_partner_id"/>
+                        <field name="dt_stock_id" domain="[('company', '=', company)]"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator colspan="2" string="Account credit"/>
+                        <field name="ct_account_id" domain="[('company', '=', company)]"/>
+                        <field name="ct_analytic_id"/>
+                        <field name="ct_partner_id"/>
+                        <field name="ct_stock_id" domain="[('company', '=', company)]"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator colspan="2" string="Product Information"/>
+                        <field name="product_id"/>
+                        <field name="product_uom_id"/>
+                        <field name="quantity"/>
+                        <field name="unit_price"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator colspan="2" string="Finance Information"/>
+                        <field name="amount"/>
+                        <field name="amount_currency"/>
+                        <field name="currency_id"/>
+                        <field name="state" readonly="1"/>
+                        <group col="2" colspan="2">
+            	             <button name="button_posted" states="draft" string="in Accounting" type="object"/>
+        	             <button name="button_cancel" states="posted" string="Cancel" type="object"/>
+    	                     <button name="button_deleted" states="deleted" string="Restore in Draft" type="object"/>
+	                </group>
+                    </group>
+                </form>
+            </field>
+    </record>
+
+
+    <record id="action_move_lines_ru_recycle_select" model="ir.actions.act_window">
+            <field name="name">Entry Lines (Russia standart) - recycle </field>
+            <field name="res_model">account.move.lines.ru</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_move_lines_ru_recycle_tree"/>
+    </record>
+
+    <!--
+    Account.Entry Edition
+    -->
+
+        <record id="view_move_ru_recycle_tree" model="ir.ui.view">
+            <field name="name">account.move.ru.recycle.tree</field>
+            <field name="model">account.move.ru</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Account Entry">
+                    <field name="company" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="date_created" select="1"/>
+                    <field name="date_transaction" select="1"/>
+                    <field name="period_id" select="1"/>
+                    <field name="period_tax"/>
+                    <field name="document_id" select="2"/>
+                    <field name="from_partner_id" select="2"/>
+                    <field name="to_partner_id" select="2"/>
+                    <field name="amount"/>
+                    <field name="state" select="1" readonly="1"/>
+                    <group col="2" colspan="2">
+                         <button name="button_posted" states="draft" string="in Accounting" type="object"/>
+                         <button name="button_cancel" states="posted" string="Cancel" type="object"/>
+                         <button name="button_deleted" states="deleted" string="Restore in Draft" type="object"/>
+                    </group>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_move_ru_recycle_form" model="ir.ui.view">
+            <field name="name">account.move.ru.recycle.form</field>
+            <field name="model">account.move.ru</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Account Entry">
+                    <group colspan="6" col="8">
+                       <field colspan="6" name="name"/>
+                       <field colspan="2" name="company"/>
+                       <field colspan="4" name="document_id"/>
+                       <field colspan="2" name="amount"/>
+                       <field colspan="6" name="description"/>
+                    </group>
+	            <field name="from_partner_id" invisible="1"/>
+                    <field name="to_partner_id" invisible="1"/>
+                    <field colspan="4" name="line_ids" nolabel="1" widget="one2many_list" default_get="{'lines':line_ids }">
+                        <form string="Account Entry Line">
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Account debit"/>
+                                <field name="dt_account_id" domain="[('company', '=', parent.company),('type','&lt;&gt;','view'), ('type', '&lt;&gt;', 'closed')]"/>
+                                <field name="dt_analytic_id"/>
+                                <field name="dt_partner_id"/>
+                                <field name="dt_stock_id"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Account credit"/>
+                                <field name="ct_account_id" domain="[('company', '=', parent.company),('type','&lt;&gt;','view'), ('type', '&lt;&gt;', 'closed')]"/>
+                                <field name="ct_analytic_id"/>
+                                <field name="ct_partner_id"/>
+                                <field name="ct_stock_id"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Product Information"/>
+                                <field name="product_id"/>
+                                <field name="product_uom_id"/>
+                                <field name="quantity"/>
+                                <field name="unit_price"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Finance Information"/>
+                                <field name="amount"/>
+                                <field name="amount_currency"/>
+                                <field name="currency_id"/>
+                                <field name="state" readonly="1"/>
+                                <group col="2" colspan="2">
+                                     <button name="button_posted" states="draft" string="in Accounting" type="object"/>
+                                     <button name="button_cancel" states="posted" string="Cancel" type="object"/>
+	                             <button name="button_deleted" states="deleted" string="Restore in Draft" type="object"/>
+	                        </group>
+                            </group>
+                        </form>
+                        <tree editable="top" string="Account Entry Lines">
+                                <field name="dt_account_id" string="Debit account" domain="[('company', '=', parent.company),('type','&lt;&gt;','view'), ('type', '&lt;&gt;', 'closed')]"/>
+                                <field name="dt_partner_id"/>
+                                <field name="dt_analytic_id" string="Debit analytic"/>
+                                <field name="ct_account_id" string="Credit account" domain="[('company', '=', parent.company),('type','&lt;&gt;','view'), ('type', '&lt;&gt;', 'closed')]"/>
+                                <field name="ct_partner_id"/>
+                                <field name="ct_analytic_id" string="Credit analytic"/>
+                                <field name="amount"/>
+                                <field name="state"  readonly="1"/>
+                                <field name="amount_currency"/>
+                                <field name="currency_id"/>
+                                <field name="dt_stock_id"/>
+                                <field name="ct_stock_id"/>
+                                <field name="product_id"/>
+                                <field name="product_uom_id"/>
+                                <field name="quantity"/>
+                                <field name="unit_price"/>
+                        </tree>
+                    </field>
+                    <group col="2" colspan="2">
+                       <separator colspan="2" string="Date and Periods"/>
+                       <field colspan="2" name="date_transaction"/>
+                       <field colspan="2" name="period_id"/>
+                    </group>
+                    <group col="2" colspan="2">
+                       <separator colspan="2" string="State"/>
+                       <field name="state" select="1"  readonly="1"/>
+                       <group col="2" colspan="2">
+                           <button name="button_posted" states="draft" string="in Accounting" type="object"/>
+                           <button name="button_cancel" states="posted" string="Cancel" type="object"/>
+                           <button name="button_deleted" states="deleted" string="Restore in Draft" type="object"/>
+                       </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_move_ru_recycle_form" model="ir.actions.act_window">
+            <field name="name">Transaction Journal (Russia Standart) recycle</field>
+            <field name="res_model">account.move.ru</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'deleted')]</field>
+            <field name="view_id" ref="view_move_ru_recycle_tree"/>
+        </record>
+
+        <record id="action_move_lines_ru_recycle_form" model="ir.actions.act_window">
+            <field name="name">Entry Lines (Russia Standart) recycle</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.move.lines.ru</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'deleted')]</field>
+            <field name="view_id" ref="view_move_lines_ru_recycle_tree"/>
+        </record>
+
+<!-->
+        <record id="action_move_ru_lines_search_view1" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_move_lines_ru_tree"/>
+            <field name="act_window_id" ref="action_move_lines_ru_search"/>
+        </record>
+
+        <record id="action_move_lines_ru_search_view2" model="ir.actions.act_window.view">
+            <field eval="11" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_move_lines_ru_form"/>
+            <field name="act_window_id" ref="action_move_lines_ru_search"/>
+        </record>
+<-->
+<!--
+	Tree and Form for Deleted (Recycled)
+-->
+
+        <menuitem action="action_move_ru_recycle_form" id="menu_account_move_ru_recycle" parent="account.menu_finance"/>
+        <menuitem action="action_move_lines_ru_recycle_form" id="menu_action_move_lines_ru_recycle" parent="menu_account_move_ru_recycle"/>
+
+    </data>
+</openerp>

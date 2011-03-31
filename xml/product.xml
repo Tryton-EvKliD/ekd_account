@@ -1,1 +1,103 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/product.xml
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+        <record model="ir.ui.view" id="product_view_tree_qty">
+            <field name="model">product.product</field>
+            <field name="type">tree</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                    <tree string="Products">
+                        <field name="name" select="1"/>
+                        <field name="code" select="1"/>
+<!-->
+                        <field name="quantity" select="2"/>
+                        <field name="unit_price" select="2"/>
+                        <field name="amount" select="2"/>
+                        <field name="forecast_quantity" select="2"/>
+<-->
+                        <field name="default_uom" select="2"/>
+                        <field name="type" select="1"/>
+                        <field name="active" select="2"/>
+                    </tree>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="product_view_form_accounting">
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit" ref="product.product_view_form"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <data>
+                <xpath
+                    expr="/form/notebook/page[@id=&quot;packing&quot;]"
+                    position="after">
+                        <page string="Accounting" col="4" id="accounting_ru">
+                            <group id="account" col="2">
+                                <separator string="Account Product" id="accounts" colspan="2"/>
+                                <label name="account_category"/>
+                                <field name="account_category"/>
+                                <label name="account_income"/>
+                                <field name="account_income"/>
+                                <label name="account_expense"/>
+                                <field name="account_expense"/>
+                                <separator string="Account Taxes" id="accounts" colspan="2"/>
+                                <label name="account_taxes_category"/>
+                                <field name="account_taxes_category"/>
+                                <label name="account_tax_input"/>
+                                <field name="account_tax_input"/>
+                                <label name="account_tax_output"/>
+                                <field name="account_tax_output"/>
+                            </group>
+                            <group id="account" col="2">
+                                <separator string="Taxes" id="taxes" colspan="2"/>
+                                <label name="taxes_category"/>
+                                <field name="taxes_category"/>
+                                <field colspan="2" name="taxes"/>
+                            </group>
+                        </page>
+                </xpath>
+                </data>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="category_view_form">
+            <field name="model">product.category</field>
+            <field name="type">form</field>
+            <field name="inherit" ref="product.category_view_form"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <data>
+                   <xpath
+                        expr="/form/notebook/page[@id=&quot;childs&quot;]"
+                        position="after">
+                        <page string="Accounting" col="4" id="accounting_ru">
+                            <group id="account" col="2">
+                                <separator string="Account Product" id="accounts" colspan="2"/>
+                                <label name="account_income"/>
+                                <field name="account_income"/>
+                                <label name="account_expense"/>
+                                <field name="account_expense"/>
+                                <separator string="Account Taxes" id="accounts" colspan="2"/>
+                                <label name="account_tax_input"/>
+                                <field name="account_tax_input"/>
+                                <label name="account_tax_output"/>
+                                <field name="account_tax_output"/>
+                            </group>
+                            <group id="account" col="2">
+                                <separator string="Taxes" id="taxes" colspan="2"/>
+                                <field name="taxes"/>
+                            </group>
+                        </page>
+                    </xpath>
+                </data>
+                ]]>
+            </field>
+        </record>
+
+    </data>
+</tryton>

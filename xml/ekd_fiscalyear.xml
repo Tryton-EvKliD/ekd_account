@@ -1,1 +1,216 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_fiscalyear.xml
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+        <menuitem name="Fiscal Years" parent="ekd_account.menu_ekd_account_configuration"
+            id="menu_fiscalyear_configuration"/>
+        <record model="ir.ui.view" id="fiscalyear_view_form">
+            <field name="model">ekd.fiscalyear</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Fiscal Year" col="6">
+                    <label name="company"/>
+                    <field name="company"/>
+                    <newline/>
+                    <label name="name"/>
+                    <field colspan="3" name="name"/>
+                    <label name="code"/>
+                    <field name="code"/>
+                    <label name="start_date"/>
+                    <field name="start_date"/>
+                    <label name="end_date"/>
+                    <field name="end_date"/>
+                    <label name="state"/>
+                    <field name="state"/>
+                    <notebook colspan="6">
+                        <page string="Periods" id="periods">
+                            <field name="periods" colspan="4"/>
+                            <group col="2" colspan="4" id="buttons">
+                                <button name="create_period" string="Create Monthly Periods"
+                                    type="object"
+                                    states="{'invisible': Or(Not(Equal(Eval('state'), 'open')), Bool(Eval('periods')))}"/>
+                                <button name="create_period_3" string="Create 3 Months Periods"
+                                    type="object"
+                                    states="{'invisible': Or(Not(Equal(Eval('state'), 'open')), Bool(Eval('periods')))}"/>
+                            </group>
+                        </page>
+                        <page string="Sequences" id="sequences">
+                            <group colspan="4" col="4" id="account_sequuence">
+                                <label name="post_move_sequence"/>
+                                <field name="post_move_sequence"/>
+                                <label name="post_move_line_sequence"/>
+                                <field name="post_move_line_sequence"/>
+                                <label name="cash_book_sequence"/>
+                                <field name="cash_book_sequence"/>
+                            </group>
+                            <separator colspan="4" string="Sequence Document" id="sep_invoice"/>
+                            <field name="sequence_fiscalyear">
+                                <tree>
+                                    <field name="template"/>
+                                    <field name="sequence"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Accounting policies on Fiscal Year" id="options">
+                            <group col="2" colspan="2" id="main_setup0">
+                                <label name="system_tax"/>
+                                <field name="system_tax"/>
+                                <label name="implementation_type"/>
+                                <field name="implementation_type"/>
+                                <label name="cost_method"/>
+                                <field name="cost_method"/>
+                            </group>
+                            <group col="2" colspan="2" id="main_setup1">
+                            </group>
+                        </page>
+                    </notebook>
+                    <label string="" colspan="2" id="empty"/>
+                    <group col="1" colspan="2" id="buttons">
+                        <button name="set_state_draft" string="Draft"
+                                type="object"
+                                states="{'invisible': Equal(Eval('state'), 'draft')}"/>
+                        <button name="set_state_open" string="Open"
+                                type="object"
+                                states="{'invisible': Not(Equal(Eval('state'), 'draft'))}"/>
+                        <button name="close" string="Close Fiscal Year" type="object"
+                            states="{'invisible': In(Eval('state'), ['close','draft'])}"
+                            icon="tryton-readonly"
+                            confirm="Are you sure to close fiscal year?"/>
+                        <button name="reopen" string="Re-Open Fiscal Year" type="object"
+                            states="{'invisible': Not(Equal(Eval('state'), 'close'))}"
+                            icon="tryton-clear"/>
+                    </group>
+                </form>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="fiscalyear_view_tree">
+            <field name="model">ekd.fiscalyear</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Fiscal Years">
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
+                    <field name="state" select="1"/>
+                </tree>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.action.act_window" id="act_fiscalyear_form">
+            <field name="name">Fiscal Years</field>
+            <field name="res_model">ekd.fiscalyear</field>
+            <field name="view_type">form</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_fiscalyear_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="fiscalyear_view_tree"/>
+            <field name="act_window" ref="act_fiscalyear_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_fiscalyear_form_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="fiscalyear_view_form"/>
+            <field name="act_window" ref="act_fiscalyear_form"/>
+        </record>
+        <menuitem parent="menu_fiscalyear_configuration"
+            action="act_fiscalyear_form" id="menu_fiscalyear_form"/>
+
+        <record model="ir.model.access" id="access_fiscalyear">
+            <field name="model" search="[('model', '=', 'ekd.fiscalyear')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_fiscalyear_account_admin">
+            <field name="model" search="[('model', '=', 'ekd.fiscalyear')]"/>
+            <field name="group" ref="group_ekd_account_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_fiscalyear">
+            <field name="model" search="[('model', '=', 'ekd.fiscalyear')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+
+        <record model="ir.rule" id="rule_fiscalyear1">
+            <field name="field" search="[('name', '=', 'company'), ('model.model', '=', 'ekd.fiscalyear')]"/>
+            <field name="operator">=</field>
+            <field name="operand">User/Current Company</field>
+            <field name="rule_group" ref="rule_group_fiscalyear"/>
+        </record>
+
+        <record model="ir.rule" id="rule_fiscalyear2">
+            <field name="field" search="[('name', '=', 'company'), ('model.model', '=', 'ekd.fiscalyear')]"/>
+            <field name="operator">=</field>
+            <field name="operand">False</field>
+            <field name="rule_group" ref="rule_group_fiscalyear"/>
+        </record>
+
+        <record model="ir.ui.view" id="fiscalyear_close_fiscalyear_init_view_form">
+            <field name="model">ekd.fiscalyear.close_fiscalyear.init</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Close Fiscal Year">
+                    <label name="close_fiscalyear"/>
+                    <field name="close_fiscalyear"/>
+                    <label name="transfer"/>
+                    <field name="transfer"/>
+                    <label name="skip_closed"/>
+                    <field name="skip_closed"/>
+                    <label name="transfer_analytic"/>
+                    <field name="transfer_analytic"/>
+                    <label name="skip_closed_analytic"/>
+                    <field name="skip_closed_analytic"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.action.wizard" id="act_close_fiscalyear">
+            <field name="name">Close Fiscal Year</field>
+            <field name="wiz_name">ekd.fiscalyear.close_fiscalyear</field>
+        </record>
+
+        <menuitem parent="menu_ekd_processing" action="act_close_fiscalyear"
+            id="menu_close_fiscalyear"/>
+<!-->
+        <menuitem parent="menu_ekd_processing" action="act_close_fiscalyear"
+            id="menu_transfer_balances_accounts"/>
+
+        <menuitem parent="menu_ekd_processing" action="act_close_fiscalyear"
+            id="menu_transfer_balances_fiscalyear"/>
+
+        <menuitem parent="menu_ekd_processing" action="act_close_fiscalyear"
+            id="menu_close_account_fiscalyear"/>
+
+<-->
+
+        <record model="ir.sequence.type" id="sequence_type_ekd_account_book_bank">
+            <field name="name">Account Bank Expense</field>
+            <field name="code">ekd.book.sequence.bank.expense</field>
+            <field name="groups"
+                eval="[('add', ref('res.group_admin')), ('add', ref('group_ekd_account_admin'))]"/>
+        </record>
+
+        <record model="ir.sequence.type" id="sequence_type_ekd_account_book_cash_income">
+            <field name="name">Account RU Book Cash Income</field>
+            <field name="code">ekd.book.sequence.cash.income</field>
+            <field name="groups"
+                eval="[('add', ref('res.group_admin')), ('add', ref('group_ekd_account_admin'))]"/>
+        </record>
+        <record model="ir.sequence.type" id="sequence_type_ekd_account_book_cash_expense">
+            <field name="name">Account RU Book Cash expense</field>
+            <field name="code">ekd.book.sequence.cash.expense</field>
+            <field name="groups"
+                eval="[('add', ref('res.group_admin')), ('add', ref('group_ekd_account_admin'))]"/>
+        </record>
+
+    </data>
+</tryton>

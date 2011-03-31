@@ -1,1 +1,76 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_doc_cash_view.xml
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+
+        <record id="view_documents_cash_form_acc" model="ir.ui.view">
+            <field name="model">ekd.document.head.cash</field>
+            <field name="type">form</field>
+            <field name="inherit" ref="ekd_documents.view_documents_cash_form"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <data>
+                    <xpath
+                        expr="/form/notebook/page[@id=&quot;general&quot;]/group[@id=&quot;spec&quot;]/group[@id=&quot;spec&quot;]/field[@name=&quot;cash_account_txt&quot;]"
+                        position="replace">
+                            <field colspan="1"  name="cash_account" widget="selection" select="1"/>
+
+                    </xpath>
+                    <xpath
+                        expr="/form/notebook/page[@id=&quot;general&quot;]/group[@id=&quot;spec&quot;]/group[@id=&quot;spec&quot;]/field[@name=&quot;corr_account_txt&quot;]"
+                        position="replace">
+                        <field colspan="1" name="corr_account" widget="selection" select="1"/>
+                    </xpath>
+                    <xpath
+                        expr="/form/notebook/page[@id=&quot;lines_payment&quot;]/group[@id=&quot;analytic&quot;]/field[@name=&quot;lines_payment&quot;]"
+                        position="after">
+                            <group col="2" colspan="2" id="move">
+                                <separator colspan="2" string="Account move" id="id_entry"/>
+                                <field colspan="2" name="move"/>
+                                <separator  colspan="2" string="Page Cash Book" id="id_balance"/>
+                                <field colspan="2" name="balance"/>
+                            </group>
+                    </xpath>
+                </data>
+                ]]>
+            </field>
+        </record>
+
+        <record id="view_documents_cash_tree" model="ir.ui.view">
+            <field name="model">ekd.document.head.cash</field>
+            <field name="type">tree</field>
+            <field name="inherit" ref="ekd_documents.view_documents_cash_tree"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <data>
+                    <xpath
+                        expr="/tree/field[@name=&quot;corr_account_txt&quot;]"
+                        position="replace">
+                        <field name="corr_account" select="2"/>
+                    </xpath>
+                    <xpath
+                        expr="/tree/field[@name=&quot;cash_account_txt&quot;]"
+                        position="replace">
+                        <field name="cash_account" select="2"/>
+                    </xpath>
+                </data>
+                ]]>
+            </field>
+        </record>
+
+
+        <record model="ir.sequence.type" id="sequence_type_doc_cash_income_account">
+            <field name="name">Document of cash income</field>
+            <field name="code">documents.document.cash.income</field>
+            <field name="groups"
+                eval="[('add', ref('group_ekd_account_admin'))]"/>
+        </record>
+
+        <record model="ir.sequence.type" id="sequence_type_doc_cash_expense_account">
+            <field name="name">Document of cash expense</field>
+            <field name="code">documents.document.cash.expense</field>
+            <field name="groups"
+                eval="[('add', ref('group_ekd_account_admin'))]"/>
+        </record>
+
+    </data>
+</tryton>

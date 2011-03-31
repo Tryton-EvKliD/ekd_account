@@ -1,1 +1,304 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_bal_material.xml
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+        <!--
+      Формы для бухгалтерии
+      2. Товарно-материальные ценности ТМЦ
+    -->
+
+     <record id="view_balances_product_tree" model="ir.ui.view">
+             <field name="model">ekd.balances.product</field>
+            <field name="type">tree</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Balances of Accounts" colors="If(Equal(Eval('state'),'deleted'), 'grey', If(Equal(Eval('state'), 'done'), 'blue', 'black'))">
+                    <field name="period" select="1"/>
+                    <field name="account" select="1"/>
+                    <field name="party" select="1"/>
+                    <field name="product" select="1"/>
+                    <field name="product_uom" select="1"/>
+                    <field name="unit_price" select="1"/>
+                    <field name="balance"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="balance_end"/>
+                    <field name="state" select="2"/>
+                    <field name="currency_digits" tree_invisible="1"/>
+                    <field name="account_type" tree_invisible="1"/>
+                    <field name="account_kind" tree_invisible="1"/>
+                    <field name="type_balance" tree_invisible="1"/>
+                    <field name="unit_digits" tree_invisible="1"/>
+                </tree>
+                ]]>
+            </field>
+    </record>
+
+    <record id="view_balances_product_form" model="ir.ui.view">
+            <field name="model">ekd.balances.product</field>
+            <field name="type">form</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Balance of Account Product">
+                    <group colspan="8" col="8" id="main_head">
+                        <group colspan="8" col="6" id="main_head">
+                            <label align="0.0" name="company"/>
+                            <field colspan="2" name="company" widget="selection"/>
+                            <newline/>
+                            <label align="0.0" name="period"/>
+                            <field name="period"/>
+                            <label align="0.0" name="account"/>
+                            <field name="account"/>
+                            <label name="party" />
+                            <field name="party" />
+                            <newline/>
+                            <label name="product" />
+                            <field name="product"/>
+                            <label name="product_uom" />
+                            <field name="product_uom"/>
+                            <label name="unit_price" />
+                            <field name="unit_price"/>
+                        </group>
+                        <group col="2" colspan="2" id="gr_start">
+                            <separator colspan="2" string="Balance of Product on start period" id="sep_start"/>
+                            <label name="qbalance"/>
+                            <field name="qbalance"/>
+                            <label name="balance"/>
+                            <field name="balance"/>
+                        </group>
+                        <group col="4" colspan="2" id="gr_turnover">
+                            <separator colspan="4" string="Turnover of Product" id="sep_turnover"/>
+                            <label name="qdebit"/>
+                            <field name="qdebit"/>
+                            <label name="qcredit"/>
+                            <field name="qcredit"/>
+                            <label name="debit"/>
+                            <field name="debit"/>
+                            <label name="credit"/>
+                            <field name="credit"/>
+                        </group>
+                        <group col="2" colspan="2" id="gr_end">
+                            <separator colspan="2" string="Balance of Account on end period" id="sep_end"/>
+                            <label name="qbalance_end"/>
+                            <field name="qbalance_end"/>
+                            <label name="balance_end"/>
+                            <field name="balance_end"/>
+                        </group>
+                        <group col="2" colspan="2" id="state_balance">
+                            <separator colspan="2" string="State" id="sep_state"/>
+                            <label name="state"/>
+                            <field name="state"/>
+                            <group col="2" colspan="2" id="button">
+                                <button string="Close" name="button_done" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'draft'))}"/>
+                                <button string="Draft" name="button_draft" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'posted'))}"/>
+                                <button string="Restore" name="button_restore" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'deleted'))}"/>
+                            </group>
+                        </group>
+                    </group>
+                    <field name="account_type" invisible="1"/>
+                    <field name="account_kind" invisible="1"/>
+                    <field name="type_balance" invisible="1"/>
+                    <field name="unit_digits" invisible="1"/>
+                    <field name="currency_digits" invisible="1"/>
+                    <group string="Debit and Credit Turnover" col="4" id="move_line">
+<!-->
+                    <notebook>
+                        <page string="Debit and Credit Turnover" id="dt_ct_page">
+<-->
+                            <field name="dt_line" colspan="2" height="300">
+                                <tree string="Account Entry Lines" >
+                                    <field name="ct_account"/>
+                                    <field name="ct_analytic"/>
+                                    <field name="ct_party"/>
+                                    <field name="amount"/>
+                                    <field name="amount_currency"/>
+                                    <field name="currency"/>
+                                    <field name="state" />
+                                    <field name="product" tree_invisible="1"/>
+                                    <field name="product_uom" tree_invisible="1"/>
+                                    <field name="quantity" tree_invisible="1"/>
+                                    <field name="unit_price" tree_invisible="1"/>
+                                    <field name="dt_account" tree_invisible="1"/>
+                                    <field name="dt_analytic" tree_invisible="1"/>
+                                    <field name="dt_party" tree_invisible="1"/>
+                                    <field name="dt_kind" tree_invisible="1"/>
+                                    <field name="ct_kind" tree_invisible="1"/>
+                                    <field name="dt_type" tree_invisible="1"/>
+                                    <field name="ct_type" tree_invisible="1"/>
+                                    <field name="currency_digits" tree_invisible="1" />
+                                    <field name="second_currency_digits" tree_invisible="1" />
+                                    <field name="unit_digits" tree_invisible="1" />
+                                </tree>
+                            </field>
+                            <field name="ct_line" colspan="2" height="300">
+                                <tree string="Account Entry Lines" >
+                                    <field name="dt_account"/>
+                                    <field name="dt_analytic"/>
+                                    <field name="dt_party"/>
+                                    <field name="amount"/>
+                                    <field name="amount_currency"/>
+                                    <field name="currency"/>
+                                    <field name="state" />
+                                    <field name="ct_account" tree_invisible="1"/>
+                                    <field name="ct_analytic" tree_invisible="1"/>
+                                    <field name="ct_party" tree_invisible="1"/>
+                                    <field name="product" tree_invisible="1"/>
+                                    <field name="product_uom" tree_invisible="1"/>
+                                    <field name="quantity" tree_invisible="1"/>
+                                    <field name="unit_price" tree_invisible="1"/>
+                                    <field name="dt_kind" tree_invisible="1"/>
+                                    <field name="ct_kind" tree_invisible="1"/>
+                                    <field name="dt_type" tree_invisible="1"/>
+                                    <field name="ct_type" tree_invisible="1"/>
+                                    <field name="currency_digits" tree_invisible="1" />
+                                    <field name="second_currency_digits" tree_invisible="1" />
+                                    <field name="unit_digits" tree_invisible="1" />
+                                </tree>
+                            </field>
+                    </group>
+                </form>
+                ]]>
+            </field>
+    </record>
+
+    <record model="ir.action.act_window" id="act_balances_product_form">
+        <field name="name">Balance and Turnover of Products</field>
+        <field name="res_model">ekd.balances.product</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('company', '=', Get( Eval('context', {}), 'company', False)), ('account.kind_analytic', 'in', ['product', 'product_fixed', 'product_intagible', 'product_material']), ('period', '=', Get(Eval('context', {}),  'current_period', False))]</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_product_form_view1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_balances_product_tree"/>
+        <field name="act_window" ref="act_balances_product_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_product_form_view2">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="view_balances_product_form"/>
+        <field name="act_window" ref="act_balances_product_form"/>
+    </record>
+
+    <menuitem parent="menu_ekd_account_statements1" action="act_balances_product_form"
+                        id="menu_balances_product_form"/>
+
+    <record model="ir.action.act_window" id="act_balances_fixed_form">
+        <field name="name">Balance and Turnover of Fixed Assets</field>
+        <field name="res_model">ekd.balances.product</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('company', '=', Get( Eval('context', {}), 'company', False)), ('account.kind_analytic', 'in', ['product_fixed']), ('period', '=', Get(Eval('context', {}),  'current_period', False))]</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_fixed_form_view1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_balances_product_tree"/>
+        <field name="act_window" ref="act_balances_fixed_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_fixed_form_view2">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="view_balances_product_form"/>
+        <field name="act_window" ref="act_balances_fixed_form"/>
+    </record>
+
+    <menuitem parent="menu_balances_product_form" action="act_balances_fixed_form"
+                        id="menu_balances_fixed_form"/>
+
+    <record model="ir.action.act_window" id="act_balances_intagible_form">
+        <field name="name">Balance and Turnover of Intagible Assets</field>
+        <field name="res_model">ekd.balances.product</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('company', '=', Get( Eval('context', {}), 'company', False)), ('account.kind_analytic', 'in', ['product_intagible']), ('period', '=', Get(Eval('context', {}),  'current_period', False))]</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_intagible_form_view1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_balances_product_tree"/>
+        <field name="act_window" ref="act_balances_intagible_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_intagible_form_view2">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="view_balances_product_form"/>
+        <field name="act_window" ref="act_balances_intagible_form"/>
+    </record>
+
+    <menuitem parent="menu_balances_product_form" action="act_balances_intagible_form"
+                        id="menu_balances_intagible_form"/>
+
+    <record model="ir.action.act_window" id="act_balances_material_form">
+        <field name="name">Balance and Turnover of Materials</field>
+        <field name="res_model">ekd.balances.product</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('company', '=', Get( Eval('context', {}), 'company', False)), ('account.kind_analytic', 'in', ['product_material']), ('period', '=', Get(Eval('context', {}),  'current_period', False))]</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_material_form_view1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_balances_product_tree"/>
+        <field name="act_window" ref="act_balances_material_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_material_form_view2">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="view_balances_product_form"/>
+        <field name="act_window" ref="act_balances_material_form"/>
+    </record>
+
+    <menuitem parent="menu_balances_product_form" action="act_balances_material_form"
+                        id="menu_balances_material_form"/>
+
+    <record model="ir.action.act_window" id="act_balances_goods_form">
+        <field name="name">Balance and Turnover of Goods</field>
+        <field name="res_model">ekd.balances.product</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('company', '=', Get( Eval('context', {}), 'company', False)), ('account.kind_analytic', 'in', ['product_goods']), ('period', '=', Get(Eval('context', {}),  'current_period', False))]</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_goods_form_view1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_balances_product_tree"/>
+        <field name="act_window" ref="act_balances_goods_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_goods_form_view2">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="view_balances_product_form"/>
+        <field name="act_window" ref="act_balances_goods_form"/>
+    </record>
+
+    <menuitem parent="menu_balances_product_form" action="act_balances_goods_form"
+                        id="menu_balances_goods_form"/>
+
+    <record model="ir.model.access" id="access_ru_balances_product">
+        <field name="model" search="[('model', '=', 'ekd.balances.product')]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_ekd_account_balances_product">
+        <field name="model" search="[('model', '=', 'ekd.balances.product')]"/>
+        <field name="group" ref="group_ekd_account"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_ru_balances_product_admin">
+        <field name="model" search="[('model', '=', 'ekd.balances.product')]"/>
+        <field name="group" ref="group_ekd_account_admin"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="True"/>
+    </record>
+
+    <record model="ir.sequence.type" id="sequence_type_balances_product">
+        <field name="name">Account RU balances_product</field>
+        <field name="code">ekd.balances.sequence.product</field>
+        <field name="groups"
+                eval="[('add', ref('res.group_admin')), ('add', ref('group_ekd_account_admin'))]"/>
+    </record>
+    </data>
+</tryton>

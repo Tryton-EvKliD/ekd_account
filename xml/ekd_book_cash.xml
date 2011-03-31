@@ -1,1 +1,310 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_book_cash.xml
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+        <!--
+      Кассовая книга
+      Книга по расчетным счетам
+      Книга продаж
+      Книга покупок
+      Книга счетов-фактур
+      Книга складских перемещений
+      Книга отгрузки
+
+    -->
+
+    <menuitem name="Accounting Sections" parent="menu_ekd_account" 
+            id="menu_ekd_account_section" groups="group_ekd_account,group_ekd_account_admin"
+            sequence="20" />
+
+    <record id="view_book_cash_tree" model="ir.ui.view">
+            <field name="model">ekd.balances.finance</field>
+            <field name="type">tree</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Pages of Book Cash">
+                    <field name="date_balance" select="1"/>
+                    <field name="account" select="1"/>
+                    <field name="balance"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="balance_end"/>
+                    <field name="state" select="2"/>
+                    <field name="currency_digits" tree_invisible="1"/>
+                    <field name="account_type" tree_invisible="1"/>
+                    <field name="account_kind" tree_invisible="1"/>
+                </tree>
+                ]]>
+            </field>
+    </record>
+
+    <record id="view_book_cash_form" model="ir.ui.view">
+            <field name="model">ekd.balances.finance</field>
+            <field name="type">form</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Pages of Book Cash">
+                    <group colspan="10" col="10" id="main_head">
+                        <group colspan="4" col="4" id="general_head">
+                            <label align="0.0" name="company"/>
+                            <field name="company" widget="selection"/>
+                            <newline/>
+                            <label align="0.0" name="date_balance"/>
+                            <field name="date_balance"/>
+                            <newline/>
+                            <label align="0.0" name="account"/>
+                            <field name="account"/>
+                        </group>
+                        <group col="5" colspan="4" id="balance">
+                            <separator colspan="5" string="Balance and Turnover of Cash" id="sep_amount"/>
+                            <label name="balance"/>
+                            <field name="balance"/>
+                            <label name="income"/>
+                            <field name="income"/>
+                            <field name="debit"/>
+                            <newline/>
+                            <label name="balance_end"/>
+                            <field name="balance_end"/>
+                            <label name="expense"/>
+                            <field name="expense"/>
+                            <field name="credit"/>
+                        </group>
+                        <group col="2" colspan="2" id="state_balance">
+                            <separator colspan="2" string="State" id="sep_state"/>
+                            <label name="state"/>
+                            <field name="state"/>
+                            <group col="2" colspan="2" id="button">
+                                <button string="Open" name="button_open" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'draft'))}"/>
+                                <button string="Close" name="button_done" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'open'))}"/>
+                                <button string="Draft" name="button_draft" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'done'))}"/>
+                                <button string="Restore" name="button_restore" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'deleted'))}"/>
+                            </group>
+                        </group>
+                    </group>
+                    <field name="account_type" invisible="1"/>
+                    <field name="account_kind" invisible="1"/>
+                    <field name="currency_digits" invisible="1"/>
+                    <notebook>
+                        <page string="Lines Page of Cash" id="cash_page">
+                            <field name="documents_cash_fnc">
+                                <tree string="Lines Cash" fill="1">
+                                    <field name="template_cash" select="1"/>
+                                    <field name="number_our" select="1"/>
+                                    <field name="from_to_party" select="1"/>
+                                    <field name="name" />
+                                    <field name="note" widget="text" select="1"/>
+                                    <field name="income" sum="Total Income"/>
+                                    <field name="expense" sum="Total Expense" />
+                                    <field name="state" />
+                                    <field name="currency_digits" tree_invisible="1" />
+                                    <field name="type_transaction" tree_invisible="1" />
+                                    <field name="amount" tree_invisible="1" />
+                                </tree>
+                            </field>
+                        </page>
+<!-->
+
+                        <page string="Debit and Credit Turnover" id="dt_ct_page">
+                            <field name="dt_line" colspan="2">
+                                <tree string="Account Entry Lines" colors="red:amount&lt;0" >
+                                    <field name="ct_account"/>
+                                    <field name="ct_party"/>
+                                    <field name="amount" sum="Total Debit"/>
+                                    <field name="amount_currency"/>
+                                    <field name="currency"/>
+                                    <field name="state" />
+                                    <field name="dt_kind" tree_invisible="1"/>
+                                    <field name="ct_kind" tree_invisible="1"/>
+                                    <field name="dt_type" tree_invisible="1"/>
+                                    <field name="ct_type" tree_invisible="1"/>
+                                    <field name="currency_digits" tree_invisible="1" />
+                                    <field name="second_currency_digits" tree_invisible="1" />
+                                </tree>
+                            </field>
+                            <field name="ct_line" colspan="2">
+                                <tree string="Account Entry Lines" colors="red:amount&lt;0" >
+                                    <field name="dt_account"/>
+                                    <field name="dt_party"/>
+                                    <field name="amount" sum="Total Credit"/>
+                                    <field name="amount_currency"/>
+                                    <field name="currency"/>
+                                    <field name="state" />
+                                    <field name="dt_kind" tree_invisible="1"/>
+                                    <field name="ct_kind" tree_invisible="1"/>
+                                    <field name="dt_type" tree_invisible="1"/>
+                                    <field name="ct_type" tree_invisible="1"/>
+                                    <field name="currency_digits" tree_invisible="1" />
+                                    <field name="second_currency_digits" tree_invisible="1" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Entries" id="entries_page">
+                            <field name="lines" colspan="4" >
+                                <tree string="Account Entry Lines" colors="red:amount&lt;0" >
+                                    <field name="dt_account"/>
+                                    <field name="dt_analytic"/>
+                                    <field name="dt_party"/>
+                                    <field name="ct_account"/>
+                                    <field name="ct_analytic"/>
+                                    <field name="ct_party"/>
+                                    <field name="amount"/>
+                                    <field name="amount_currency"/>
+                                    <field name="currency"/>
+                                    <field name="state" />
+                                    <field name="dt_kind" tree_invisible="1"/>
+                                    <field name="ct_kind" tree_invisible="1"/>
+                                    <field name="dt_type" tree_invisible="1"/>
+                                    <field name="ct_type" tree_invisible="1"/>
+                                    <field name="currency_digits" tree_invisible="1" />
+                                    <field name="second_currency_digits" tree_invisible="1" />
+                                </tree>
+                            </field>
+                        </page>
+<-->
+                    </notebook>
+                </form>
+                ]]>
+            </field>
+    </record>
+
+    <record model="ir.action.act_window" id="act_book_cash_form">
+        <field name="name">Cash Book</field>
+        <field name="res_model">ekd.balances.finance</field>
+        <field name="domain">[('account.kind_analytic','in', ['money_cash', 'money_bank']),
+                                ('date_balance','&gt;=', Get(Eval('context', {}), 'start_period', False)),
+                                ('date_balance','&lt;=', Get(Eval('context', {}), 'end_period',False)),
+                                ]</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="view_type">form</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_book_cash_form_view1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_book_cash_tree"/>
+        <field name="act_window" ref="act_book_cash_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_book_cash_form_view2">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="view_book_cash_form"/>
+        <field name="act_window" ref="act_book_cash_form"/>
+    </record>
+
+    <menuitem parent="menu_ekd_account_section" action="act_book_cash_form"
+                        id="menu_book_cash_form"/>
+
+    <record id="view_page_book_cash_tree" model="ir.ui.view">
+            <field name="model">ekd.document.head.cash</field>
+            <field name="type">tree</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                    <tree string="Lines Cash" fill="1">
+                        <field name="template_cash" select="1"/>
+                        <field name="number_our" select="1"/>
+                        <field name="from_to_party" select="1"/>
+                        <field name="name" />
+                        <field name="note" widget="text" select="1"/>
+                        <field name="income" sum="Total Income"/>
+                        <field name="expense" sum="Total Expense" />
+                        <field name="state" />
+                        <field name="currency_digits" tree_invisible="1" />
+                        <field name="type_transaction" tree_invisible="1" />
+                        <field name="amount" tree_invisible="1" />
+                    </tree>
+                ]]>
+            </field>
+    </record>
+
+    <record model="ir.action.act_window" id="act_page_book_cash_form">
+        <field name="name">Page Book Cash</field>
+        <field name="res_model">ekd.document.head.cash</field>
+        <field name="view_type">form</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_page_book_cash_form_view1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_page_book_cash_tree"/>
+        <field name="act_window" ref="act_page_book_cash_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_page_book_cash_form_view2">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="ekd_documents.view_documents_cash_form"/>
+        <field name="act_window" ref="act_page_book_cash_form"/>
+    </record>
+
+    <record model="ir.sequence.type" id="sequence_type_ekd_account_book_cash">
+        <field name="name">Line Book Cash</field>
+        <field name="code">ekd.account.sequence.book.cash</field>
+        <field name="groups"
+                eval="[('add', ref('res.group_admin')), ('add', ref('group_ekd_account_admin'))]"/>
+    </record>
+
+    <record model="ir.action.wizard" id="act_open_page_cash">
+        <field name="name">Open Page Cash</field>
+        <field name="wiz_name">ekd.balances.finance.open</field>
+        <field name="model">ekd.balances.finance</field>
+        <field name="groups"
+                eval="[('add', ref('res.group_admin')), ('add', ref('group_ekd_account_admin'))]"/>
+    </record>
+
+    <record model="ir.action.keyword" id="act_open_tree_open_cash_keyword">
+        <field name="keyword">tree_open</field>
+        <field name="model">ekd.balances.finance,0</field>
+        <field name="action" ref="act_open_page_cash"/>
+    </record>
+
+    <record model="ir.action.keyword" id="act_tree_action_page_cash_keyword">
+        <field name="keyword">tree_action</field>
+        <field name="model">ekd.balances.finance,0</field>
+        <field name="action" ref="act_open_page_cash"/>
+    </record>
+
+    <record model="ir.action.keyword" id="act_form_action_page_cash_keyword">
+        <field name="keyword">form_action</field>
+        <field name="model">ekd.balances.finance,0</field>
+        <field name="action" ref="act_open_page_cash"/>
+    </record>
+
+    <record model="ir.action.keyword" id="act_relate_page_cash_keyword">
+        <field name="keyword">form_relate</field>
+        <field name="model">ekd.balances.finance,0</field>
+        <field name="action" ref="act_open_page_cash"/>
+    </record>
+
+    <record model="ir.action.keyword" id="act_graph_page_cash_keyword">
+        <field name="keyword">graph_open</field>
+        <field name="model">ekd.balances.finance,0</field>
+        <field name="action" ref="act_open_page_cash"/>
+    </record>
+
+
+<!-->
+    <record model="ir.model.access" id="access_ru_book_cash">
+        <field name="model" search="[('model', '=', 'ekd.book.cash')]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_ekd_account_book_cash">
+        <field name="model" search="[('model', '=', 'ekd.book.cash')]"/>
+        <field name="group" ref="group_account_cash"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_ru_book_cash_admin">
+        <field name="model" search="[('model', '=', 'ekd.book.cash')]"/>
+        <field name="group" ref="group_account_cash_admin"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="True"/>
+    </record>
+<-->
+    </data>
+</tryton>

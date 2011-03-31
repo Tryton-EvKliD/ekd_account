@@ -1,1 +1,71 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_doc_request_view.xml
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+
+        <record id="view_documents_request_line_form_acc" model="ir.ui.view">
+            <field name="model">ekd.document.line.request</field>
+            <field name="type">form</field>
+            <field name="inherit" ref="ekd_documents.view_documents_request_line_form"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <data>
+                    <xpath
+                        expr="/form/group[@id=&quot;product&quot;]/separator[@id=&quot;sep_product&quot;]"
+                        position="after">
+                            <label name="analytic"/>
+                            <field colspan="5" name="analytic"/>
+                    </xpath>
+                </data>
+                ]]>
+            </field>
+        </record>
+
+        <record id="view_documents_request_line_tree_acc" model="ir.ui.view">
+            <field name="model">ekd.document.line.request</field>
+            <field name="type">form</field>
+            <field name="inherit" ref="ekd_documents.view_documents_request_line_tree"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <data>
+                    <xpath
+                        expr="/tree/field[@name=&quot;name&quot;]"
+                        position="after">
+                            <field name="analytic"/>
+                    </xpath>
+                </data>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_documents_request_request_form">
+            <field name="name">Request for confirm</field>
+            <field name="res_model">ekd.document.head.request</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','request')]</field>
+        </record>
+        <menuitem name="Request on money for confirm" sequence="10" groups="ekd_documents.group_request,ekd_documents.group_request_admin"
+            action="act_documents_request_request_form" id="menu_documents_request_request" 
+            parent="ekd_documents.menu_documents_request"/>
+
+        <record model="ir.action.act_window" id="act_documents_request_confirm_form">
+            <field name="name">Request on money for payment</field>
+            <field name="res_model">ekd.document.head.request</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','confirmed')]</field>
+        </record>
+        <menuitem name="Request on money for payment" sequence="10" groups="ekd_documents.group_request,ekd_documents.group_request_admin"
+            action="act_documents_request_confirm_form" id="menu_documents_request_confirm" 
+            parent="menu_document_pay"/>
+
+        <record model="ir.action.act_window" id="act_documents_request_issued_form">
+            <field name="name">Request for at issued</field>
+            <field name="res_model">ekd.document.head.request</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','payment')]</field>
+        </record>
+        <menuitem name="Request on money for issued" sequence="10" groups="ekd_documents.group_request_admin"
+            action="act_documents_request_issued_form" id="menu_documents_request_issued"
+            parent="menu_document_pay"/>
+
+    </data>
+</tryton>

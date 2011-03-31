@@ -1,1 +1,242 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_tax.xml
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+
+
+        <record model="res.group" id="group_ekd_account_tax">
+                    <field name="name">Account Tax </field>
+        </record>
+
+        <record model="res.group" id="group_ekd_account_tax_admin">
+                    <field name="name">Administration Account Tax</field>
+        </record>
+
+    <!--
+    =======================
+    Tree and  Form  
+    =======================
+    -->
+
+        <record id="view_ekd_account_tax_group_form" model="ir.ui.view">
+            <field name="model">ekd.account.tax.group</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                    <form string="Group Tax" col="4" >
+                        <group colspan="4" col="8" id="doc_head">
+                            <label name="name"/>
+                            <field colspan="4" name="name"/>
+                            <label name="code"/>
+                            <field name="code"/>
+                        </group>
+                        <group colspan="4" id="spec">
+                             <field name="taxes" mode="tree">
+                                 <tree>
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                    <field name="shortname"/>
+                                    <field name="current_rate"/>
+                                    <field name="type_base"/>
+                                    <field name="type_race"/>
+                                    <field name="kind"/>
+                                    <field name="active"/>
+                                 </tree>
+                             </field>
+                        </group>
+                </form>
+                ]]>
+            </field>
+        </record>
+
+        <record id="view_ekd_account_tax_group_tree" model="ir.ui.view">
+            <field name="model">ekd.account.tax.group</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                    <tree string="Account Tax Group">
+                        <field name="name" select="1"/>
+                        <field name="code" select="1"/>
+                    </tree>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_ekd_account_tax_group_form">
+            <field name="name">Account Tax Group</field>
+            <field name="res_model">ekd.account.tax.group</field>
+            <field name="view_type">form</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_ekd_account_tax_group_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="view_ekd_account_tax_group_tree"/>
+            <field name="act_window" ref="act_ekd_account_tax_group_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_ekd_account_tax_group_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="view_ekd_account_tax_group_form"/>
+            <field name="act_window" ref="act_ekd_account_tax_group_form"/>
+        </record>
+
+        <menuitem name="Account Tax Group"  sequence="28" 
+            groups="group_ekd_account_tax,group_ekd_account_tax_admin"
+            action="act_ekd_account_tax_group_form"
+            id="menu_ekd_account_tax_group" parent="ekd_account.menu_ekd_account_configuration"/>
+
+        <record id="view_ekd_account_tax_form" model="ir.ui.view">
+            <field name="model">ekd.account.tax</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                    <form string="Tax" col="8" >
+                        <group colspan="6" col="6" id="head">
+                                <label name="name"/>
+                                <field colspan="5" name="name"/>
+                                <label name="shortname"/>
+                                <field name="shortname"/>
+                                <label name="sequence"/>
+                                <field name="sequence"/>
+                                <label name="active"/>
+                                <field name="active"/>
+                                <newline/>
+                        </group>
+                        <group colspan="2" id="type">
+                                <separator colspan="6" string="Accounting" id="sep_start"/>
+                                <label name="kind"/>
+                                <field name="kind"/>
+                                <label name="type_base"/>
+                                <field name="type_base"/>
+                                <label name="type_rate"/>
+                                <field name="type_rate"/>
+                                <label name="current_rate"/>
+                                <field name="current_rate"/>
+                        </group>
+                        <notebook>
+                            <page string="Rate" id="rate">
+                                 <field name="rate" mode="tree">
+                                     <tree>
+                                         <field name="rate"/>
+                                         <field name="type"/>
+                                         <field name="greater"/>
+                                         <field name="less"/>
+                                         <field name="start_date"/>
+                                         <field name="end_date"/>
+                                         <field name="active"/>
+                                         <field name="rate_digits" tree_invisible="1"/>
+                                     </tree>
+                                 </field>
+                            </page>
+                            <page string="Accounting" id="accounting">
+                                <label name="account_tax"/>
+                                <field name="account_tax"/>
+                                <label name="move_payment_tax"/>
+                                <field name="move_payment_tax"/>
+                                <label name="move_tax_calculation"/>
+                                <field name="move_tax_calculation"/>
+                            </page>
+                            <page string="Childs Tax" id="childs">
+                                <field name="childs"/>
+                            </page>
+                        </notebook>
+                    <field name="rate_digits" invisible="1"/>
+                    </form>
+                ]]>
+            </field>
+        </record>
+
+        <record id="view_ekd_account_tax_tree" model="ir.ui.view">
+            <field name="model">ekd.account.tax</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Account Tax">
+                    <field name="group"/>
+                    <field name="name"/>
+                    <field name="shortname"/>
+                    <field name="current_rate"/>
+                    <field name="sequence"/>
+                    <field name="type_base"/>
+                    <field name="type_race"/>
+                    <field name="kind"/>
+                    <field name="active"/>
+                </tree>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_ekd_account_tax_form">
+            <field name="name">Account Tax</field>
+            <field name="res_model">ekd.account.tax</field>
+            <field name="view_type">form</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_ekd_account_tax_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="view_ekd_account_tax_tree"/>
+            <field name="act_window" ref="act_ekd_account_tax_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_ekd_account_tax_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="view_ekd_account_tax_form"/>
+            <field name="act_window" ref="act_ekd_account_tax_form"/>
+        </record>
+
+        <menuitem name="Account Tax"  sequence="28" 
+            groups="group_ekd_account_tax,group_ekd_account_tax_admin"
+            action="act_ekd_account_tax_form"
+            id="menu_ekd_account_tax" parent="ekd_account.menu_ekd_account_tax_group"/>
+
+        <record model="ir.model.access" id="access_ekd_account_tax_group">
+            <field name="model" search="[('model', '=', 'ekd.account.tax.group')]"/>
+            <field name="group" ref="ekd_account.group_ekd_account_tax"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+        <record model="ir.model.access" id="access_ekd_account_tax_group_admin">
+            <field name="model" search="[('model', '=', 'ekd.account.tax.group')]"/>
+            <field name="group" ref="ekd_account.group_ekd_account_tax_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_ekd_account_tax">
+            <field name="model" search="[('model', '=', 'ekd.account.tax')]"/>
+            <field name="group" ref="ekd_account.group_ekd_account_tax"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+        <record model="ir.model.access" id="access_ekd_account_tax_admin">
+            <field name="model" search="[('model', '=', 'ekd.account.tax')]"/>
+            <field name="group" ref="ekd_account.group_ekd_account_tax_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_ekd_account_tax_rate">
+            <field name="model" search="[('model', '=', 'ekd.account.tax.rate')]"/>
+            <field name="group" ref="ekd_account.group_ekd_account_tax"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+        <record model="ir.model.access" id="access_ekd_account_tax_rate_admin">
+            <field name="model" search="[('model', '=', 'ekd.account.tax.rate')]"/>
+            <field name="group" ref="ekd_account.group_ekd_account_tax_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+    </data>
+</tryton>

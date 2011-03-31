@@ -1,1 +1,34 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_wiz_move.xml
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+
+        <record model="ir.action.wizard" id="wizard_ekd_account_move_post">
+            <field name="name">Post Move</field>
+            <field name="wiz_name">ekd.account.move.post</field>
+            <field name="model">ekd.account.move</field>
+        </record>
+
+        <record model="ir.action.keyword"
+            id="act_post_move_keyword1">
+            <field name="keyword">form_action</field>
+            <field name="model">ekd.account.move,0</field>
+            <field name="action" ref="wizard_ekd_account_move_post"/>
+        </record>
+
+        <record model="ir.action.wizard" id="wizard_ekd_account_move_cancel">
+            <field name="name">Cancel Post Move</field>
+            <field name="wiz_name">ekd.account.move.cancel</field>
+            <field name="model">ekd.account.move</field>
+        </record>
+
+        <record model="ir.action.keyword"
+            id="act_cancel_move_keyword1">
+            <field name="keyword">form_action</field>
+            <field name="model">ekd.account.move,0</field>
+            <field name="action" ref="wizard_ekd_account_move_cancel"/>
+        </record>
+
+    </data>
+</tryton>

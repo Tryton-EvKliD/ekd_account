@@ -1,1 +1,55 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_party.xml
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+
+        <record model="ir.ui.view" id="party_view_tree">
+            <field name="model">party.party</field>
+            <field name="inherit" ref="party.party_view_tree"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <data>
+                    <xpath
+                        expr="/tree/field[@name=&quot;vat_code&quot;]"
+                        position="after">
+                        <field name="receivable_today_ekd" select="2"/>
+                        <field name="payable_today_ekd" select="2"/>
+                    </xpath>
+                </data>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="party_view_form">
+            <field name="model">party.party</field>
+            <field name="inherit" ref="party.party_view_form"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <data>
+                    <xpath
+                        expr="/form/notebook/page[@id=&quot;accounting&quot;]"
+                        position="inside">
+                        <group colspan="4" string="Accounting party" id="accounting_party">
+                            <separator string="Account" colspan="4" id="account_ekd"/>
+                            <label name="account_receivable_ekd"/>
+                            <field name="account_receivable_ekd"/>
+                            <label name="account_payable_ekd"/>
+                            <field name="account_payable_ekd"/>
+                            <newline/>
+                            <label name="receivable_today_ekd"/>
+                            <field name="receivable_today_ekd"/>
+                            <label name="payable_today_ekd"/>
+                            <field name="payable_today_ekd"/>
+                            <label name="receivable_ekd"/>
+                            <field name="receivable_ekd"/>
+                            <label name="payable_ekd"/>
+                            <field name="payable_ekd"/>
+                        </group>
+                    </xpath>
+                </data>
+                ]]>
+            </field>
+        </record>
+
+    </data>
+</tryton>

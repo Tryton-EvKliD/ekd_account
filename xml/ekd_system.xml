@@ -1,1 +1,306 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_system.xml
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data noupdate="0">
+
+<!-->
+    <record model="ir.dictions"
+        id="000">
+        <field name="key"></field>
+        <field name="value"></field>
+        <field name="model"></field>
+        <field name="pole"></field>
+        <field name="sequence"></field>
+    </record>
+<-->
+
+<!-- Diction For Level Analytic -->
+
+    <record model="ir.dictions"
+        id="type_analytic_party">
+        <field name="key">party.party</field>
+        <field name="value">Party</field>
+        <field name="model">ekd.account.level_analytic</field>
+        <field name="pole">type_analytic</field>
+        <field name="sequence">010</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="type_analytic_party_supplier">
+        <field name="key">party.supplier</field>
+        <field name="value">Supplier</field>
+        <field name="model">ekd.account.level_analytic</field>
+        <field name="pole">type_analytic</field>
+        <field name="sequence">012</field>
+        <field name="domain">[('supplier','=',True)]</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="type_analytic_party_customer">
+        <field name="key">party.customer</field>
+        <field name="value">Customer</field>
+        <field name="model">ekd.account.level_analytic</field>
+        <field name="pole">type_analytic</field>
+        <field name="sequence">014</field>
+        <field name="domain">[('customer','=',True)]</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="type_analytic_analytic">
+        <field name="key">ekd.account.analytic</field>
+        <field name="value">Additional analytical account</field>
+        <field name="model">ekd.account.level_analytic</field>
+        <field name="pole">type_analytic</field>
+        <field name="sequence">030</field>
+        <field name="domain">[('type','in',['view','root'])]</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="type_analytic_tax">
+        <field name="key">ekd.account.tax</field>
+        <field name="value">Tax</field>
+        <field name="model">ekd.account.level_analytic</field>
+        <field name="pole">type_analytic</field>
+        <field name="sequence">090</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="type_analytic_document_base">
+        <field name="key">ekd.document</field>
+        <field name="value">Document Base</field>
+        <field name="model">ekd.account.level_analytic</field>
+        <field name="pole">type_analytic</field>
+        <field name="sequence">200</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="type_analytic_document_invoice">
+        <field name="key">ekd.document.head.invoice</field>
+        <field name="value">Invoice</field>
+        <field name="model">ekd.account.level_analytic</field>
+        <field name="pole">type_analytic</field>
+        <field name="sequence">202</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="type_analytic_document_invoice_tax">
+        <field name="key">ekd.document.head.invoice_tax</field>
+        <field name="value">Invoice Tax</field>
+        <field name="model">ekd.account.level_analytic</field>
+        <field name="pole">type_analytic</field>
+        <field name="sequence">203</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="type_analytic_document__invoice_goods">
+        <field name="key">ekd.document.head.invoice_goods</field>
+        <field name="value">Invoice Goods</field>
+        <field name="model">ekd.account.level_analytic</field>
+        <field name="pole">type_analytic</field>
+        <field name="sequence">204</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="type_analytic_employee">
+        <field name="key">company.employee</field>
+        <field name="value">Employee</field>
+        <field name="model">ekd.account.level_analytic</field>
+        <field name="pole">type_analytic</field>
+        <field name="sequence">210</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="type_analytic_department">
+        <field name="key">ekd.company.department</field>
+        <field name="value">Department</field>
+        <field name="model">ekd.account.level_analytic</field>
+        <field name="pole">type_analytic</field>
+        <field name="sequence">210</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="type_analytic_department_stock">
+        <field name="key">ekd.company.department.stock</field>
+        <field name="value">Stock Location</field>
+        <field name="model">ekd.account.level_analytic</field>
+        <field name="pole">type_analytic</field>
+        <field name="sequence">210</field>
+    </record>
+
+
+<!-- Diction For Document Request -->
+    <record model="ir.dictions"
+        id="request_ref_order">
+        <field name="key">ekd.document.head.order</field>
+        <field name="value">Order</field>
+        <field name="model">ekd.document.head.request</field>
+        <field name="pole">document_ref</field>
+        <field name="sequence">100</field>
+    </record>
+    <record model="ir.dictions"
+        id="request_ref_letter">
+        <field name="key">ekd.document.head.letter</field>
+        <field name="value">Letter</field>
+        <field name="model">ekd.document.head.request</field>
+        <field name="pole">document_ref</field>
+        <field name="sequence">200</field>
+    </record>
+
+<!-- Diction For Account Move-->
+
+    <record model="ir.dictions"
+        id="move_ref_cash">
+        <field name="key">ekd.document.head.cash</field>
+        <field name="value">Cash</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document_ref</field>
+        <field name="sequence">010</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="move_ref_bank">
+        <field name="key">ekd.document.head.bank</field>
+        <field name="value">Bank</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document_ref</field>
+        <field name="sequence">020</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="move_ref_invoice">
+        <field name="key">ekd.document.head.invoice</field>
+        <field name="value">Invoice</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document_ref</field>
+        <field name="sequence">030</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="move_ref_invoice_tax">
+        <field name="key">ekd.document.head.invoice_tax</field>
+        <field name="value">Invoice Tax</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document_ref</field>
+        <field name="sequence">030</field>
+    </record>
+    <record model="ir.dictions"
+        id="move_ref_invoice_goods">
+        <field name="key">ekd.document.head.invoice_goods</field>
+        <field name="value">Invoice Goods</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document_ref</field>
+        <field name="sequence">030</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="move_ref_letter">
+        <field name="key">ekd.document.head.letter</field>
+        <field name="value">Letter</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document_ref</field>
+        <field name="sequence">040</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="move_ref_order">
+        <field name="key">ekd.document.head.order</field>
+        <field name="value">Order</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document_ref</field>
+        <field name="sequence">050</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="move_ref_project">
+        <field name="key">project.project</field>
+        <field name="value">Project</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document_ref</field>
+        <field name="sequence">060</field>
+    </record>
+
+<!-- Diction For Account Move Document for party -->
+
+    <record model="ir.dictions"
+        id="move2_ref_cash">
+        <field name="key">ekd.document.head.cash</field>
+        <field name="value">Cash</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document2_ref</field>
+        <field name="sequence">010</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="move2_ref_bank">
+        <field name="key">ekd.document.head.bank</field>
+        <field name="value">Bank</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document2_ref</field>
+        <field name="sequence">020</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="move2_ref_invoice">
+        <field name="key">ekd.document.head.invoice</field>
+        <field name="value">Invoice</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document2_ref</field>
+        <field name="sequence">030</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="move2_ref_invoice_tax">
+        <field name="key">ekd.document.head.invoice_tax</field>
+        <field name="value">Invoice Tax</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document2_ref</field>
+        <field name="sequence">030</field>
+    </record>
+    <record model="ir.dictions"
+        id="move2_ref_invoice_goods">
+        <field name="key">ekd.document.head.invoice_goods</field>
+        <field name="value">Invoice Goods</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document2_ref</field>
+        <field name="sequence">030</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="move2_ref_letter">
+        <field name="key">ekd.document.head.letter</field>
+        <field name="value">Letter</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document2_ref</field>
+        <field name="sequence">040</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="move2_ref_order">
+        <field name="key">ekd.document.head.order</field>
+        <field name="value">Order</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document2_ref</field>
+        <field name="sequence">050</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="move2_ref_project">
+        <field name="key">project.project</field>
+        <field name="value">Project</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document2_ref</field>
+        <field name="sequence">060</field>
+    </record>
+
+    <record model="ir.dictions"
+        id="move2_ref_request">
+        <field name="key">ekd.document.head.request</field>
+        <field name="value">Request on Money</field>
+        <field name="model">ekd.account.move</field>
+        <field name="pole">document2_ref</field>
+        <field name="sequence">005</field>
+    </record>
+
+    </data>
+</tryton>

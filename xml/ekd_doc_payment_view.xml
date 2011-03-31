@@ -1,1 +1,169 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_doc_payment_view.xml
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+
+        <!-- Группа Документы -->
+        <record model="res.group" id="group_cash_payment">
+            <field name="name">Payment through Bank</field>
+        </record>
+        <record model="res.group" id="group_bank_payment">
+            <field name="name">Payment through Cash</field>
+        </record>
+
+        <menuitem name="Documents for payment" parent="ekd_documents.menu_documents"
+            id="menu_document_pay" sequence="30" groups="group_cash_payment,group_bank_payment"/>
+
+        <menuitem name="Payments with Cash" parent="menu_document_pay"
+            id="menu_document_pay_cash" sequence="10" groups="group_cash_payment"/>
+        <menuitem name="Payments with Bank" parent="menu_document_pay"
+            id="menu_document_pay_bank" sequence="20" groups="group_bank_payment"/>
+
+        <record id="view_documents_for_pay_form" model="ir.ui.view">
+            <field name="model">ekd.document.payment</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                    <form string="List of documents">
+                        <group col="6" id="gr_head">
+                            <group col="6" colspan="4" id="gr_head">
+                                <group col="6" colspan="6" id="gr_note">
+                                    <label name="company" />
+                                    <field name="company" select="1"/>
+                                    <newline/>
+                                    <label name="template" />
+                                    <field name="template" widget="selection" select="1"/>
+                                    <label name="number_our"/>
+                                    <field name="number_our" select="1"/>
+                                    <label name="date_account" />
+                                    <field name="date_account" select="1"/>
+                                </group>
+                                <group col="4" colspan="6" id="gr_note">
+                                    <label name="from_party"/>
+                                    <field name="from_party" select="1"/>
+                                    <label name="to_party"/>
+                                    <field name="to_party" select="1"/>
+                                </group>
+                            </group>
+                            <group col="4" colspan="2" id="gr_spec">
+                                    <label name="amount"/>
+                                    <field name="amount"/>
+                                    <label name="amount_payment"/>
+                                    <field name="amount_payment"/>
+                                    <label name="amount_paid"/>
+                                    <field name="amount_paid"/>
+                                    <label name="amount_balance"/>
+                                    <field name="amount_balance"/>
+                                    <label name="state"/>
+                                    <field colspan="3" name="state"/>
+<!-->
+                                <group col="2" colspan="2" id="buttons">
+                                    <button string="Post" name="button_post" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'payment'))}"/>
+                                    <button string="Draft" name="button_draft" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'posted'))}"/>
+                                    <button string="Restore" name="button_restore" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'deleted'))}"/>
+                                    <button string="Confirm" name="button_confimed" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'confirmed'))}"/>
+                                    <button string="At Issued" name="button_issued" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'confirmed'))}"/>
+                                    <button string="Pay" name="button_payment" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'at_issued'))}"/>
+                                </group>
+<-->
+                            </group>
+                        </group>
+			<notebook>
+    	        	    <page col="2" string="Lines Request" id="pg_lines">
+                                <field name="lines" mode="tree">
+<!-->
+                                    <form string="Lines Request">                                                              
+		                        <group col="2" colspan="2" id="product">
+		                            <separator colspan="2" string="Product Information" id="sep_product"/>
+		                            <label name="analytic"/>
+		                            <field name="analytic"/>
+		                            <label name="name"/>
+		                            <field name="name"/>
+		                        </group>
+		                        <group col="2" colspan="2" id="gr_amount">
+		                            <separator colspan="2" string="Finance Information" id="sep_amount"/>
+		                            <label name="amount_request"/>
+		                            <field name="amount_request"/>
+		                            <label name="amount_received"/>
+		                            <field name="amount_received"/>
+		                            <label name="amount_balance"/>
+		                            <field name="amount_balance"/>
+		                            <label name="state" />
+		                            <field name="state" />
+		                       </group>
+		                       <group colspan="4" id="note">
+		                           <separator colspan="4" string="Note" id="sep_note"/>
+		                           <field name="note"/>
+		                       </group>
+		                    </form>
+<-->
+		                    <tree>
+				        <field name="name"/>
+				        <field name="analytic"/>
+				        <field name="amount_request"/>                                                         
+			                <field name="amount_received"/>                                                        
+			                <field name="amount_balance"/>                                                        
+				        <field name="state" />
+                                        <field name="request" />
+				    </tree>                                                                                     
+				</field>
+			    </page>
+    	        	    <page col="2" string="Payment transactions" id="pg_parent">
+                                <field name="parent"/>
+			    </page>
+    	        	    <page string="Note" id="pg_note">
+                                <field colspan="4" name="note"/>
+    	        	    </page>
+			</notebook>
+                    </form>
+                ]]>
+            </field>
+        </record>
+
+        <record id="view_documents_for_pay_tree" model="ir.ui.view">
+            <field name="model">ekd.document.payment</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Documents">
+                    <field name="template" select="1"/>
+                    <field name="number_our" select="1"/>
+                    <field name="date_account" select="1"/>
+                    <field name="from_party" select="1"/>
+                    <field name="to_party" select="1"/>
+                    <field name="amount"/>
+                    <field name="amount_payment"/>
+                    <field name="amount_paid"/>
+                    <field name="state"/>
+                </tree>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_documents_for_pay_form">
+            <field name="name">All for payment</field>
+            <field name="res_model">ekd.document.payment</field>
+            <field name="domain">[('state','in',('payment','partially'))]</field>
+            <field name="context">{'model': 'ekd.document.payment', 'document_id':[Eval('active_id')]}</field>
+            <field name="view_type">form</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_documents_for_pay_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="view_documents_for_pay_tree"/>
+            <field name="act_window" ref="act_documents_for_pay_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_documents_for_pay_form_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="view_documents_for_pay_form"/>
+            <field name="act_window" ref="act_documents_for_pay_form"/>
+        </record>
+
+        <menuitem name="All Documents for payment" sequence="1" groups="group_cash_payment,group_bank_payment"
+            action="act_documents_for_pay_form" id="menu_document_for_pay" parent="menu_document_pay"/>
+    </data>
+</tryton>

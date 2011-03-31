@@ -1,1 +1,193 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_bal_analytic_ext.xml
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+        <!--
+      Остатки и обороты по уровням аналитических счетов
+    -->
+
+     <record id="view_balances_analytic_ext_tree" model="ir.ui.view">
+            <field name="model">ekd.balances.analytic</field>
+            <field name="type">tree</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Balances of Analytic Accounts" 
+                    colors="If(Equal(Eval('state'),'deleted'), 'grey', If(Equal(Eval('state'), 'done'), 'blue', 'black'))">
+                    <field name="level" select="1"/>
+                    <field name="name_model"/>
+                    <field name="name_ref" select="1"/>
+                    <field name="balance"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="balance_end"/>
+                    <field name="state" select="2"/>
+                    <field name="model_ref" tree_invisible="1" select="1"/>
+                    <field name="account" tree_invisible="1" select="2"/>
+                    <field name="active" tree_invisible="1" select="2"/>
+                </tree>
+                ]]>
+            </field>
+    </record>
+
+    <record id="view_balances_analytic_ext_form" model="ir.ui.view">
+            <field name="model">ekd.balances.analytic</field>
+            <field name="type">form</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Balance of Analytic Account">
+                    <group col="8" id="main_head">
+                        <group colspan="8" col="10" id="main_head">
+                            <label align="0.0" name="account"/>
+                            <field name="account"/>
+                            <label name="level"/>
+                            <field name="level"/>
+                            <newline/>
+                            <label align="0.0" name="model_ref"/>
+                            <field name="model_ref"/>
+                            <label name="parent"/>
+                            <field name="parent"/>
+                        </group>
+                        <group col="2" colspan="2" id="gr_start">
+                            <separator colspan="2" string="Balance of Analytic Account on start period" id="sep_start"/>
+                            <label name="balance" />
+                            <field name="balance"/>
+                        </group>
+                        <group col="2" colspan="2" id="gr_turnover">
+                            <separator colspan="2" string="Turnover of Analytic Account" id="sep_turnover"/>
+                            <label name="debit" string="Debit" />
+                            <field name="debit"/>
+                            <label name="credit" string="Credit"/>
+                            <field name="credit"/>
+                        </group>
+                        <group col="2" colspan="2" id="gr_end">
+                            <separator colspan="2" string="Balance of Account on end period" id="sep_end"/>
+                            <label name="balance_end" string="Debit"/>
+                            <field name="balance_end"/>
+                        </group>
+                        <group col="2" colspan="2" id="state_balance">
+                            <separator colspan="2" string="State" id="sep_state"/>
+                            <label name="state"/>
+                            <field name="state"/>
+                            <group col="2" colspan="2" id="button">
+                                <button string="Done" name="button_done" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'draft'))}"/>
+                                <button string="Draft" name="button_draft" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'posted'))}"/>
+                                <button string="Restore" name="button_restore" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'deleted'))}"/>
+                            </group>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Balances and Turnover" id="dt_ct_page">
+                            <field name="childs"/>
+                        </page>
+                    </notebook>
+                </form>
+                ]]>
+            </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_balances_analytic_ext_tree1">
+        <field name="model">ekd.balances.analytic</field>
+        <field name="type">tree</field>
+        <field name="field_childs">childs</field>
+        <field name="arch" type="xml">
+            <![CDATA[
+            <tree string="Account Types Templates" >
+                <field name="level"/>
+                <field name="name_model"/>
+                <field name="name_ref" select="1"/>
+                <field name="balance"/>
+                <field name="debit"/>
+                <field name="credit"/>
+                <field name="balance_end"/>
+                <field name="model_ref" tree_invisible="1" select="1"/>
+                <field name="account" tree_invisible="1" />
+            </tree>
+            ]]>
+        </field>
+    </record>
+    <record model="ir.action.act_window" id="act_balances_analytic_ext_tree1">
+        <field name="name">Tree Analytic Account</field>
+        <field name="res_model">ekd.balances.analytic</field>
+        <field name="view_type">tree</field>
+        <field name="domain">[('parent', '=', False)]</field>
+    </record>
+    <record model="ir.action.act_window.view"
+        id="view_act_balances_analytic_ext_tree1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_balances_analytic_ext_tree1"/>
+        <field name="act_window" ref="act_balances_analytic_ext_tree1"/>
+    </record>
+<!-->
+    <menuitem parent="menu_ekd_account_statements1" action="act_balances_analytic_ext_tree1"
+                        id="menu_balances_analytic_ext_tree"/>
+<-->
+
+    <record model="ir.action.act_window" id="act_balances_analytic_ext_form">
+        <field name="name">Balance and Turnover Analytic Accounts</field>
+        <field name="res_model">ekd.balances.analytic</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('account.company', '=', Get( Eval('context', {}), 'company',False))]</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_analytic_ext_form_view1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_balances_analytic_ext_tree"/>
+        <field name="act_window" ref="act_balances_analytic_ext_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_analytic_ext_form_view2">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="view_balances_analytic_ext_form"/>
+        <field name="act_window" ref="act_balances_analytic_ext_form"/>
+    </record>
+
+<!-->
+
+    <menuitem parent="menu_balances_analytic_ext_tree" action="act_balances_analytic_ext_form"
+                        id="menu_balances_analytic_ext_form"/>
+<-->
+
+    <record model="ir.model.access" id="access_ekd_balances_analytic">
+        <field name="model" search="[('model', '=', 'ekd.balances.analytic')]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_ekd_account_balances_analytic">
+        <field name="model" search="[('model', '=', 'ekd.balances.analytic')]"/>
+        <field name="group" ref="group_ekd_account"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_ekd_balances_analytic_admin">
+        <field name="model" search="[('model', '=', 'ekd.balances.analytic')]"/>
+        <field name="group" ref="group_ekd_account_admin"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="True"/>
+    </record>
+    <record model="ir.model.access" id="access_ekd_account_balances_analytic_period">
+        <field name="model" search="[('model', '=', 'ekd.balances.analytic.period')]"/>
+        <field name="group" ref="group_ekd_account"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_ekd_balances_analytic_period_admin">
+        <field name="model" search="[('model', '=', 'ekd.balances.analytic.period')]"/>
+        <field name="group" ref="group_ekd_account_admin"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="True"/>
+    </record>
+
+    </data>
+</tryton>

@@ -1,1 +1,3 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/tools.py
+
+def turn(vals=100):
+    return 120+vals

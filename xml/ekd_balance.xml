@@ -1,1 +1,242 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_balance.xml
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+        <!--
+      Формы для бухгалтерии
+      1. Остатки и обороты по счета
+      2. В разрезе контрагентов
+      3. В разрезе расходной аналитики
+      4. В разрезе ТМЦ
+      5. По денежным счетам
+    -->
+
+    <!--
+         Entries lines - Строки проводок
+    -->
+     <record id="view_balances_account_tree" model="ir.ui.view">
+             <field name="model">ekd.balances.account</field>
+            <field name="type">tree</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Balances of Accounts" 
+                colors="If(Equal(Eval('state'),'deleted'), 'grey', 
+                        If(Equal(Eval('state'), 'done'), 'blue', 
+                        If(Or(Less(Eval('balance_dt', 0.0), 0.0), 
+                              Less(Eval('balance_ct', 0.0), 0.0),
+                              Less(Eval('debit', 0.0), 0.0), 
+                              Less(Eval('credit', 0.0), 0.0), 
+                              Less(Eval('balance_dt_end', 0.0), 0.0), 
+                              Less(Eval('balance_ct_end', 0.0), 0.0)),'red','black')))">
+                    <field name="period" select="1"/>
+                    <field name="account" select="1"/>
+                    <field name="balance_dt" sum="Balance Dt"/>
+                    <field name="balance_ct" sum="Balance Ct"/>
+                    <field name="debit" sum="Turnover Dt"/>
+                    <field name="credit" sum="Turnover Ct"/>
+                    <field name="balance_dt_end" sum="Balance end Dt"/>
+                    <field name="balance_ct_end" sum="Balance end Ct"/>
+                    <field name="state" select="2"/>
+                    <field name="currency_digits" tree_invisible="1"/>
+                    <field name="account_type" tree_invisible="1"/>
+                    <field name="account_kind" tree_invisible="1"/>
+                    <field name="type_balance" tree_invisible="1"/>
+                </tree>
+                ]]>
+            </field>
+    </record>
+
+    <record id="view_balances_account_form" model="ir.ui.view">
+            <field name="model">ekd.balances.account</field>
+            <field name="type">form</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Balance of Account">
+                    <group colspan="8" col="8" id="main_head">
+                        <group colspan="10" col="10" id="main_head">
+                            <label align="0.0" name="company"/>
+                            <field colspan="3" name="company" widget="selection"/>
+                            <newline/>
+                            <label align="0.0" name="period"/>
+                            <field colspan="2" name="period"/>
+                            <label align="0.0" name="account"/>
+                            <field colspan="2" name="account"/>
+                        </group>
+                        <group col="2" colspan="2" id="gr_start">
+                            <separator colspan="2" string="Balance of Account on start period" id="sep_start"/>
+                            <label name="balance_dt" string="Debit" />
+                            <field name="balance_dt"/>
+                            <label name="balance_ct" string="Credit"/>
+                            <field name="balance_ct"/>
+                        </group>
+                        <group col="2" colspan="2" id="gr_turnover">
+                            <separator colspan="2" string="Turnover of Account" id="sep_turnover"/>
+                            <label name="debit" string="Debit" />
+                            <field name="debit"/>
+                            <label name="credit" string="Credit"/>
+                            <field name="credit"/>
+                        </group>
+                        <group col="2" colspan="2" id="gr_end">
+                            <separator colspan="2" string="Balance of Account on end period" id="sep_end"/>
+                            <label name="balance_dt_end" string="Debit"/>
+                            <field name="balance_dt_end"/>
+                            <label name="balance_ct_end" string="Credit"/>
+                            <field name="balance_ct_end"/>
+                        </group>
+                        <group col="2" colspan="2" id="state_balance">
+                            <separator colspan="2" string="State" id="sep_state"/>
+                            <label name="state"/>
+                            <field name="state"/>
+                            <group col="2" colspan="2" id="button">
+                                <button string="Close" name="button_done" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'draft'))}"/>
+                                <button string="Draft" name="button_draft" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'posted'))}"/>
+                                <button string="Restore" name="button_restore" type="object"
+                                            states="{'invisible': Not(Equal(Eval('state'), 'deleted'))}"/>
+                            </group>
+                        </group>
+                    </group>
+                    <field name="account_type" invisible="1"/>
+                    <field name="account_kind" invisible="1"/>
+                    <field name="type_balance" invisible="1"/>
+                    <field name="currency_digits" invisible="1"/>
+                    <notebook>
+                        <page col="4" string="Debit and Credit Turnover" id="dt_ct_page">
+                            <field name="dt_line" colspan="2">
+                                <tree string="Account Entry Lines" 
+                                    colors="If(Less(Eval('amount', 0.0), 0.0),'red','black')">
+                                    <field name="ct_account"/>
+                                    <field name="ct_reference"/>
+                                    <field name="amount" sum="Total Debit"/>
+                                    <field name="product"/>
+                                    <field name="product_uom"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="amount_currency"/>
+                                    <field name="currency"/>
+                                    <field name="state" />
+                                    <field name="dt_account"/>
+                                    <field name="dt_reference"/>
+                                    <field name="dt_kind" tree_invisible="1"/>
+                                    <field name="ct_kind" tree_invisible="1"/>
+                                    <field name="dt_type" tree_invisible="1"/>
+                                    <field name="ct_type" tree_invisible="1"/>
+                                    <field name="currency_digits" tree_invisible="1" />
+                                    <field name="second_currency_digits" tree_invisible="1" />
+                                    <field name="unit_digits" tree_invisible="1" />
+                                </tree>
+                            </field>
+                            <field name="ct_line" colspan="2">
+                                <tree string="Account Entry Lines" 
+                                    colors="If(Less(Eval('amount', 0.0), 0.0),'red','black')" >
+                                    <field name="dt_account"/>
+                                    <field name="dt_reference"/>
+                                    <field name="amount" sum="Total Credit"/>
+                                    <field name="product"/>
+                                    <field name="product_uom"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="amount_currency"/>
+                                    <field name="currency"/>
+                                    <field name="state" />
+                                    <field name="ct_account"/>
+                                    <field name="ct_reference"/>
+                                    <field name="dt_kind" tree_invisible="1"/>
+                                    <field name="ct_kind" tree_invisible="1"/>
+                                    <field name="dt_type" tree_invisible="1"/>
+                                    <field name="ct_type" tree_invisible="1"/>
+                                    <field name="currency_digits" tree_invisible="1" />
+                                    <field name="second_currency_digits" tree_invisible="1" />
+                                    <field name="unit_digits" tree_invisible="1" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Entries" id="entries_page">
+                            <field name="lines" colspan="4" >
+                                <tree string="Account Entry Lines" 
+                                    colors="If(Less(Eval('amount', 0.0), 0.0),'red','black')">
+                                    <field name="dt_account"/>
+                                    <field name="dt_reference"/>
+                                    <field name="ct_account"/>
+                                    <field name="ct_reference"/>
+                                    <field name="amount" sum="Total"/>
+                                    <field name="amount_currency"/>
+                                    <field name="product"/>
+                                    <field name="product_uom"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="currency"/>
+                                    <field name="state" />
+                                    <field name="dt_kind" tree_invisible="1"/>
+                                    <field name="ct_kind" tree_invisible="1"/>
+                                    <field name="dt_type" tree_invisible="1"/>
+                                    <field name="ct_type" tree_invisible="1"/>
+                                    <field name="currency_digits" tree_invisible="1" />
+                                    <field name="second_currency_digits" tree_invisible="1" />
+                                    <field name="unit_digits" tree_invisible="1" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+                ]]>
+            </field>
+    </record>
+
+    <record model="ir.action.act_window" id="act_balances_account_form">
+        <field name="name">Balance and Turnover Accounts</field>
+        <field name="res_model">ekd.balances.account</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('account.company', '=', Get( Eval('context', {}), 'company', False))
+            , ('period', '=', Get(Eval('context', {}),  'current_period', False))]</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_account_form_view1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_balances_account_tree"/>
+        <field name="act_window" ref="act_balances_account_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_account_form_view2">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="view_balances_account_form"/>
+        <field name="act_window" ref="act_balances_account_form"/>
+    </record>
+
+    <menuitem name="Statements (Turnover on Accounts)" parent="menu_ekd_statement"
+        id="menu_ekd_account_statements1" action="act_balances_account_form" groups="group_ekd_account"
+        sequence="30" icon="tryton-preferences"/>
+
+    <record model="ir.model.access" id="access_ru_balances_account">
+        <field name="model" search="[('model', '=', 'ekd.balances.account')]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_ekd_account_balances_account">
+        <field name="model" search="[('model', '=', 'ekd.balances.account')]"/>
+        <field name="group" ref="group_ekd_account"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_ru_balances_account_admin">
+        <field name="model" search="[('model', '=', 'ekd.balances.account')]"/>
+        <field name="group" ref="group_ekd_account_admin"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="True"/>
+    </record>
+
+    <record model="ir.sequence.type" id="sequence_type_balances_account">
+        <field name="name">Account RU Balances_account</field>
+        <field name="code">ekd.balances.sequence.account</field>
+        <field name="groups"
+                eval="[('add', ref('res.group_admin')), ('add', ref('group_ekd_account_admin'))]"/>
+    </record>
+    </data>
+</tryton>

@@ -1,1 +1,80 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_balance_report.xml
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+
+        <record model="ir.action.report" id="report_balance">
+            <field name="name">Balance</field>
+            <field name="model">ekd.balances.account</field>
+            <field name="report_name">ekd.balances.account.balances</field>
+            <field name="report">ekd_account/odt/balances.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="keyword_balance">
+            <field name="keyword">form_print</field>
+            <field name="model">ekd.balances.account,0</field>
+            <field name="action" ref="report_balance"/>
+        </record>
+
+        <record model="ir.action.report" id="report_turnover">
+            <field name="name">Turnover</field>
+            <field name="model">ekd.balances.account</field>
+            <field name="report_name">ekd.balances.account.turnovers</field>
+            <field name="report">ekd_account/odt/turnover.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="keyword_turnover">
+            <field name="keyword">form_print</field>
+            <field name="model">ekd.balances.account,0</field>
+            <field name="action" ref="report_turnover"/>
+        </record>
+
+        <record model="ir.action.report" id="report_turnover_party">
+            <field name="name">Turnover of Account Party</field>
+            <field name="model">ekd.balances.party</field>
+            <field name="report_name">ekd.balances.party.turnovers</field>
+            <field name="report">ekd_account/odt/turnover_party.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="keyword_turnover_party">
+            <field name="keyword">form_print</field>
+            <field name="model">ekd.balances.party,0</field>
+            <field name="action" ref="report_turnover_party"/>
+        </record>
+
+        <record model="ir.action.report" id="report_card_party">
+            <field name="name">Card of Party</field>
+            <field name="model">ekd.balances.party</field>
+            <field name="report_name">ekd.balances.party.card</field>
+            <field name="report">ekd_account/odt/card_party.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="keyword_card_party">
+            <field name="keyword">form_print</field>
+            <field name="model">ekd.balances.party,0</field>
+            <field name="action" ref="report_card_party"/>
+        </record>
+
+        <record model="ir.action.report" id="report_turnover_goods">
+            <field name="name">Turnover of Account Goods</field>
+            <field name="model">ekd.balances.goods</field>
+            <field name="report_name">ekd.balances.goods.turnovers</field>
+            <field name="report">ekd_account/odt/turnover_goods.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="keyword_turnover_goods">
+            <field name="keyword">form_print</field>
+            <field name="model">ekd.balances.goods,0</field>
+            <field name="action" ref="report_turnover_goods"/>
+        </record>
+
+        <record model="ir.action.report" id="report_card_goods">
+            <field name="name">Card of Goods</field>
+            <field name="model">ekd.balances.goods</field>
+            <field name="report_name">ekd.balances.goods.card</field>
+            <field name="report">ekd_account/odt/card_goods.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="keyword_card_goods">
+            <field name="keyword">form_print</field>
+            <field name="model">ekd.balances.goods,0</field>
+            <field name="action" ref="report_card_goods"/>
+        </record>
+
+    </data>
+</tryton>

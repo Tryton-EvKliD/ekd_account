@@ -1,1 +1,61 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_doc_template_view.xml
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+        <record id="view_documents_template_move_form" model="ir.ui.view">
+            <field name="model">ekd.document.template</field>
+            <field name="inherit" ref="ekd_documents.view_documents_template_form"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                   <data>
+                       <xpath
+                       expr="/form/notebook/page[@id=&quot;general&quot;]"
+                       position="after">
+                        <page string="Accounting" col="4" id="accounting_ru">
+                            <group id="account" col="2">
+                                <separator string="Template Entries" id="accounts_entry" colspan="2"/>
+                                <label name="template_move"/>
+                                <field name="template_move"/>
+                                <separator string="Account" id="accounts" colspan="2"/>
+                                <label name="template_account"/>
+                                <field name="template_account"/>
+                                <label name="template_tax_account"/>
+                                <field name="template_tax_account"/>
+                            </group>
+                            <group id="taxes" col="2">
+                                <separator string="Taxes" id="taxes" colspan="2"/>
+                                <field name="taxes"/>
+                            </group>
+                        </page>
+                       </xpath>
+                   </data>
+                ]]>
+            </field>
+        </record>
+        <record id="view_documents_template_stage_move_form" model="ir.ui.view">
+            <field name="model">ekd.document.template.stage</field>
+            <field name="inherit" ref="ekd_documents.view_documents_template_stage_form"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                    <data>
+                        <xpath
+                            expr="/form/group[@id=&quot;gr_head&quot;]"
+                            position="after">
+                            <newline/>
+                            <group id="account" col="2">
+                                <separator string="Template Entries" id="accounts_entry" colspan="2"/>
+                                <label name="template_move"/>
+                                <field name="template_move"/>
+                                <separator string="Account" id="accounts" colspan="2"/>
+                                <label name="template_account"/>
+                                <field name="template_account"/>
+                                <label name="template_tax_account"/>
+                                <field name="template_tax_account"/>
+                            </group>
+                        </xpath>
+                    </data>
+                ]]>
+            </field>
+        </record>
+
+    </data>
+</tryton>

@@ -1,1 +1,60 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_company.xml
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+
+       <record model="ir.ui.view" id="company_view_cal_form">
+            <field name="model">company.company</field>
+            <field name="inherit" ref="ekd_company.company_view_form"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                    <data>
+                        <xpath
+                            expr="/form/notebook/page[@id=&quot;preferences&quot;]/group[@id=&quot;dates&quot;]/separator[@id=&quot;sp_dates&quot;]"
+                            position="after">
+                                <label name="cal_accounting"/>
+                                <field name="cal_accounting"/>
+                        </xpath>
+                    </data>
+                ]]>
+            </field>
+        </record>
+       <record model="ir.ui.view" id="user_view_form">
+            <field name="model">res.user</field>
+            <field name="inherit" ref="res.user_view_form"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                    <data>
+                        <xpath
+                            expr="/form/notebook/page[@id=&quot;preferences&quot;]/group[@id=&quot;default_period&quot;]/field[@name=&quot;current_date&quot;]"
+                            position="after">
+                                <label name="fiscalyear"/>
+                                <field name="fiscalyear"/>
+                                <label name="current_period"/>
+                                <field name="current_period"/>
+                        </xpath>
+                    </data>
+                ]]>
+            </field>
+        </record>
+       <record model="ir.ui.view" id="user_view_form_preferences">
+            <field name="model">res.user</field>
+            <field name="inherit" ref="res.user_view_form_preferences"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                    <data>
+                        <xpath
+                            expr="/form/notebook/page[@id=&quot;preferences&quot;]/group[@id=&quot;default_period&quot;]/field[@name=&quot;current_date&quot;]"
+                            position="after">
+                                <label name="fiscalyear"/>
+                                <field name="fiscalyear"/>
+                                <label name="current_period"/>
+                                <field name="current_period"/>
+                        </xpath>
+                    </data>
+                ]]>
+            </field>
+        </record>
+    </data>
+</tryton>

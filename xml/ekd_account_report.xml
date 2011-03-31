@@ -1,1 +1,32 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_account_report.xml
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+
+        <record model="ir.action.report" id="report_chart_accounts">
+            <field name="name">Chart of Accounts</field>
+            <field name="model">ekd.account</field>
+            <field name="report_name">ekd.account.chart.report</field>
+            <field name="report">ekd_account/odt/chart_account.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="keyword_chart_accounts">
+            <field name="keyword">form_print</field>
+            <field name="model">ekd.account,0</field>
+            <field name="action" ref="report_chart_accounts"/>
+        </record>
+
+        <record model="ir.action.report" id="report_move">
+            <field name="name">Operation Journal</field>
+            <field name="model">ekd.account.move</field>
+            <field name="report_name">ekd.account.move</field>
+            <field name="report">ekd_account/odt/move.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="keyword_move">
+            <field name="keyword">form_print</field>
+            <field name="model">ekd.account.move,0</field>
+            <field name="action" ref="report_move"/>
+        </record>
+
+    </data>
+</tryton>

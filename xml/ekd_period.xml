@@ -1,1 +1,203 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_period.xml
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+        <record model="ir.ui.view" id="view_ru_period_form">
+            <field name="model">ekd.period</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Period">
+                    <label name="name"/>
+                    <field name="name"/>
+                    <label name="code"/>
+                    <field name="code"/>
+                    <label name="fiscalyear"/>
+                    <field name="fiscalyear"/>
+                    <newline/>
+                    <label name="start_date"/>
+                    <field name="start_date"/>
+                    <label name="end_date"/>
+                    <field name="end_date"/>
+                    <label name="type"/>
+                    <field name="type"/>
+                    <newline/>
+                    <label name="state"/>
+                    <field name="state" colspan="3"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_ru_period_tree">
+            <field name="model">ekd.period</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Periods">
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
+                    <field name="type" select="2"/>
+                    <field name="state" select="1"/>
+                </tree>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.action.act_window" id="act_period_form">
+            <field name="name">Periods</field>
+            <field name="res_model">ekd.period</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('fiscalyear.company.id', '=', Get(Eval('context', {}), 'company', False))]</field>
+        </record>
+        <record model="ir.action.act_window.view" id="view_act_period_tree">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="view_ru_period_tree"/>
+            <field name="act_window" ref="act_period_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="view_act_period_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="view_ru_period_form"/>
+            <field name="act_window" ref="act_period_form"/>
+        </record>
+        <menuitem parent="menu_fiscalyear_form"
+            action="act_period_form" id="menu_period_form"/>
+
+        <record model="ir.model.access" id="access_period">
+            <field name="model" search="[('model', '=', 'ekd.period')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_period_account_admin">
+            <field name="model" search="[('model', '=', 'ekd.period')]"/>
+            <field name="group" ref="group_ekd_account_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.ui.view" id="open_period_transfer_init_view_form">
+            <field name="model">ekd.period.transfer.init</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[ 
+                    <form string="Transfer Balance of Accounts" col="4">
+                        <label name="company"/>
+                        <field colspan="4" name="company"/>
+                        <newline/>
+                        <label name="period_start"/>
+                        <field name="period_start"/>
+                        <label name="period_end"/>
+                        <field name="period_end"/>
+                        <group col="4" id="boolean">
+                            <label name="transfer"/>
+                            <field name="transfer"/>
+                            <label name="skip_closed"/>
+                            <field name="skip_closed"/>
+                            <label name="transfer_analytic"/>
+                            <field name="transfer_analytic"/>
+                            <label name="skip_closed_analytic"/>
+                            <field name="skip_closed_analytic"/>
+                        </group>
+                    </form>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="open_close_period_init_view_form">
+            <field name="model">ekd.period.close_period.init</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[ 
+                    <form string="Close Periods" col="2">
+                        <label name="transfer"/>
+                        <field colspan="4" name="transfer"/>
+                        <label name="skip_closed"/>
+                        <field colspan="4" name="skip_closed"/>
+                        <label name="transfer_analytic"/>
+                        <field colspan="4" name="transfer_analytic"/>
+                        <label name="skip_closed_analityc"/>
+                        <field colspan="4" name="skip_closed_analytic"/>
+                    </form>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.action.wizard" id="act_close_period">
+            <field name="name">Close Periods</field>
+            <field name="wiz_name">ekd.period.close_period</field>
+            <field name="model">ekd.period</field>
+        </record>
+        <record model="ir.action.keyword" id="act_close_period_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">ekd.period,0</field>
+            <field name="action" ref="act_close_period"/>
+        </record>
+
+        <record model="ir.action.wizard" id="act_transfer_balance">
+            <field name="name">Transfer Balance in Other Periods</field>
+            <field name="wiz_name">ekd.period.transfer</field>
+            <field name="model">ekd.period</field>
+        </record>
+        <record model="ir.action.keyword" id="act_transfer_balance_keyword1">
+            <field name="keyword">form_action</field>
+            <field name="model">ekd.period,0</field>
+            <field name="action" ref="act_transfer_balance"/>
+        </record>
+
+        <record model="ir.action.wizard" id="act_transfer_balance2">
+            <field name="name">Transfer Balance</field>
+            <field name="wiz_name">ekd.period.transfer</field>
+            <field name="model">ekd.balances.account</field>
+        </record>
+        <record model="ir.action.keyword" id="act_transfer_balance_keyword2">
+            <field name="keyword">form_action</field>
+            <field name="model">ekd.balances.account,0</field>
+            <field name="action" ref="act_transfer_balance2"/>
+        </record>
+
+        <record model="ir.action.wizard" id="act_transfer_balance3">
+            <field name="name">Transfer Balance</field>
+            <field name="wiz_name">ekd.period.transfer</field>
+        </record>
+
+        <record model="ir.action.wizard" id="act_reopen_period">
+            <field name="name">Re-Open Periods</field>
+            <field name="wiz_name">ekd.period.reopen_period</field>
+            <field name="model">ekd.period</field>
+        </record>
+        <record model="ir.action.keyword" id="act_reopen_period_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">ekd.period,0</field>
+            <field name="action" ref="act_reopen_period"/>
+        </record>
+        <record model="ir.action.act_window" id="act_period_form2">
+            <field name="name">Periods</field>
+            <field name="res_model">ekd.period</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state', '=', 'open'), ('fiscalyear.company.id', '=', Get(Eval('context', {}), 'company', False))]</field>
+        </record>
+        <record model="ir.action.act_window.view" id="view_act_period_tree2">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="view_ru_period_tree"/>
+            <field name="act_window" ref="act_period_form2"/>
+        </record>
+        <record model="ir.action.act_window.view" id="view_act_period_form2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="view_ru_period_form"/>
+            <field name="act_window" ref="act_period_form2"/>
+        </record>
+
+        <menuitem parent="menu_ekd_processing" action="act_period_form2"
+            id="menu_period_form2" name="Close Periods"/>
+
+        <menuitem parent="menu_ekd_processing" action="act_transfer_balance3"
+            id="menu_transfer_balances_accounts" name="Transfer Balances in other period"/>
+
+        <menuitem parent="menu_ekd_processing" action="act_transfer_balance3"
+            id="menu_close_account_fiscalyear" name="Close Account in Fiscal Year"/>
+
+    </data>
+</tryton>

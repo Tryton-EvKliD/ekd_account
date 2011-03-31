@@ -1,1 +1,123 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_bal_goods_balance.xml
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+        <!--
+      Формы для бухгалтерии
+      2. Товарно-материальные ценности ТМЦ
+    -->
+
+     <record id="view_balances_goods_balance_tree" model="ir.ui.view">
+             <field name="model">ekd.balances.goods.balance</field>
+            <field name="type">tree</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Balances of Accounts">
+                    <field name="period" select="1"/>
+                    <field name="account" select="1"/>
+                    <field name="department" select="1"/>
+                    <field name="party" select="1"/>
+                    <field name="product" select="1"/>
+                    <field name="product_uom" select="1"/>
+                    <field name="unit_price" select="1"/>
+                    <field name="balance"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="balance_end"/>
+                    <field name="state" select="2"/>
+                    <field name="currency_digits" tree_invisible="1"/>
+                    <field name="account_type" tree_invisible="1"/>
+                    <field name="account_kind" tree_invisible="1"/>
+                    <field name="type_balance" tree_invisible="1"/>
+                    <field name="unit_digits" tree_invisible="1"/>
+                </tree>
+                ]]>
+            </field>
+    </record>
+
+    <record id="view_balances_goods_balance_form" model="ir.ui.view">
+            <field name="model">ekd.balances.goods.balance</field>
+            <field name="type">form</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Balance of Account Goods">
+                    <field name="unit_digits" invisible="1"/>
+                    <field name="currency_digits" invisible="1"/>
+                    <group colspan="8" col="8" id="main_head">
+                            <label align="0.0" name="company"/>
+                            <field colspan="2" name="company" widget="selection"/>
+                            <newline/>
+                            <label align="0.0" name="period"/>
+                            <field name="period"/>
+                            <label align="0.0" name="account"/>
+                            <field name="account"/>
+                            <label name="department" />
+                            <field name="department" />
+                            <label name="party" />
+                            <field name="party" />
+                            <label name="date_income"/>
+                            <field name="date_income"/>
+                            <label name="product" />
+                            <field name="product"/>
+                            <label name="product_uom" />
+                            <field name="product_uom"/>
+                            <label name="unit_price" />
+                            <field name="unit_price"/>
+                            <label name="qbalance"/>
+                            <field name="qbalance"/>
+                            <label name="balance"/>
+                            <field name="balance"/>
+                            <label name="qdebit"/>
+                            <field name="qdebit"/>
+                            <label name="qcredit"/>
+                            <field name="qcredit"/>
+                            <label name="debit"/>
+                            <field name="debit"/>
+                            <label name="credit"/>
+                            <field name="credit"/>
+                            <label name="qbalance_end"/>
+                            <field name="qbalance_end"/>
+                            <label name="balance_end"/>
+                            <field name="balance_end"/>
+                    </group>
+                </form>
+                ]]>
+            </field>
+    </record>
+
+    <record model="ir.action.act_window" id="act_balances_goods_balance_form">
+        <field name="name">Balance of Goods</field>
+        <field name="res_model">ekd.balances.goods.balance</field>
+        <field name="view_type">form</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_goods_balance_form_view1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_balances_goods_balance_tree"/>
+        <field name="act_window" ref="act_balances_goods_balance_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_goods_balance_form_view2">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="view_balances_goods_balance_form"/>
+        <field name="act_window" ref="act_balances_goods_balance_form"/>
+    </record>
+
+    <record model="ir.model.access" id="access_balances_goods_balance">
+        <field name="model" search="[('model', '=', 'ekd.balances.goods.balance')]"/>
+        <field name="group" ref="group_ekd_account"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_balances_goods_balance_admin">
+        <field name="model" search="[('model', '=', 'ekd.balances.goods.balance')]"/>
+        <field name="group" ref="group_ekd_account_admin"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="True"/>
+    </record>
+
+    </data>
+</tryton>

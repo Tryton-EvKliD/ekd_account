@@ -1,1 +1,376 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_move.xml
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+        <!--
+      Формы для бухгалтерии
+      1. Форма хоз.операции
+      2. Реестр хоз.операции
+    -->
+
+    <!--
+         Entries lines - Строки проводок
+    -->
+     <record id="view_move_ru_tree" model="ir.ui.view">
+             <field name="model">ekd.account.move</field>
+            <field name="type">tree</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Account Entry Lines" 
+                    colors="If(Equal(Eval('state'), 'deleted'),'grey',
+                            If(Equal(Eval('state'), 'draft'),'blue',
+                            If(Less(Eval('amount', 0), 0), 'red', 'black')))">
+                    <field name="post_move" select="2"/>
+                    <field name="date_operation" select="1"/>
+                    <field name="document_ref" select="2"/>
+                    <field name="name" select="1"/>
+                    <field name="from_party" select="2"/>
+                    <field name="to_party" select="2"/>
+                    <field name="amount" select="2" sum="Total Entries"/>
+                    <field name="marker" select="2"/>
+                    <field name="state" select="1"/>
+                    <field name="dt_account" select="2"/>
+                    <field name="ct_account" select="2"/>
+                </tree>
+                ]]>
+            </field>
+    </record>
+
+    <record id="view_move_ru_form" model="ir.ui.view">
+            <field name="model">ekd.account.move</field>
+            <field name="type">form</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Account Entry" col="8">
+                    <group colspan="4" col="8" id="main_head">
+                        <label name="company" />
+                        <field colspan="1" name="company"/>
+                        <newline/>
+                        <label name="name" string="Description"/>
+                        <field colspan="7" name="name"/>
+                        <newline/>
+                        <separator colspan="8" string="Base for entry" id="sep_entry"/>
+                        <newline/>
+                        <field colspan="8" name="document_ref"/>
+                    </group>
+                    <group col="2" colspan="2" id="empty">
+                         <label name="post_move"/>
+                         <field name="post_move" fill="0"/>
+                         <label name="post_date"/>
+                         <field name="post_date" fill="0"/>
+                    </group>
+                    <group col="2" colspan="2" id="state">
+                         <separator colspan="2" string="Date and State" id="sep_state"/>
+                         <label name="date_operation"/>
+                         <field name="date_operation" fill="0"/>
+                         <label name="state"/>
+                         <field name="state"/>
+                         <button colspan="2" string="Post" name="button_post" type="object"
+                                     states="{'invisible': In(Eval('state'), ['posted', 'deleted'])}"/>
+                         <button colspan="2" string="Cancel" name="button_cancel" type="object"
+                                     states="{'invisible': Not(Equal(Eval('state'), 'posted'))}"/>
+                         <button colspan="2" string="Restore" name="button_restore" type="object"
+                                     states="{'invisible': Not(Equal(Eval('state'), 'deleted'))}"/>
+
+                    </group>
+<!-->
+                    <group colspan="8" col="8" id="specification">
+<-->
+                    <notebook colspan="8">
+                        <page string="Description" id="pg_description" col="8">
+                            <group colspan="6" col="6" id="documents">
+                                <separator colspan="6" string="Base for party" id="sep_party"/>
+                                <field colspan="6" name="document2_ref"/>
+                            </group>
+                            <group colspan="2" col="2" id="add_option">
+                                <separator colspan="2" string="Add option" id="sep_option"/>
+                                <label name="marker"/>
+                                <field name="marker"/>
+                            </group>
+                            <group col="8" colspan="8" id="party">
+                                <label name="from_party"/>
+                                <field colspan="1" name="from_party"/>
+                                <label name="to_party"/>
+                                <field colspan="1" name="to_party"/>
+                                <label name="amount"/>
+                                <field colspan="1" name="amount"/>
+                            </group>
+                            <group col="8" colspan="8" id="note">
+                                <group col="6" colspan="6" id="grp_note">
+                                    <separator colspan="6" string="Note" id="sep_note"/>
+                                    <field colspan="6" name="note"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Entry Lines" id="pg_line" col="8">
+                            <field name="lines" colspan="8">
+                                <form string="Account Entry Lines">
+                                    <label name="journal"/>
+                                    <field name="journal"/>
+                                    <notebook>
+                                    <page string="General" id='general'>
+                                    <field name="currency_digits" invisible="1"/>
+                                    <field name="second_currency_digits" invisible="1"/>
+                                    <field name="dt_kind" invisible="1"/>
+                                    <field name="ct_kind" invisible="1"/>
+                                    <field name="dt_kind_analytic" invisible="1"/>
+                                    <field name="ct_kind_analytic" invisible="1"/>
+                                    <field name="dt_acc_analytic" invisible="1"/>
+                                    <field name="ct_acc_analytic" invisible="1"/>
+                                    <group col="2" colspan="2" id="debit">
+                                        <separator colspan="2" string="Account debit" id="sep_debit"/>
+                                        <label name="dt_account"/>
+                                        <field name="dt_account"/>
+                                        <label name="dt_analytic"/>
+                                        <field name="dt_analytic"/>
+                                        <group col="2" colspan="2" id="analytic_debit">
+                                            <!-- separator colspan="2" string="Debit" id="sep_debit"/ -->
+                                            <label name="dt_analytic_01"/>
+                                            <field name="dt_analytic_01"/>
+                                            <label name="dt_analytic_02"/>
+                                            <field name="dt_analytic_02"/>
+                                            <label name="dt_analytic_03"/>
+                                            <field name="dt_analytic_03"/>
+                                            <label name="dt_analytic_04"/>
+                                            <field name="dt_analytic_04"/>
+                                            <label name="dt_analytic_05"/>
+                                            <field name="dt_analytic_05"/>
+                                            <label name="dt_analytic_06"/>
+                                            <field name="dt_analytic_06"/>
+                                            <label name="dt_analytic_07"/>
+                                            <field name="dt_analytic_07"/>
+                                            <field name="dt_analytic_level" invisible="1"/>
+                                            <field name="dt_analytic_accounts" invisible="1"/>
+                                        </group>
+                                    </group>
+                                    <group col="2" colspan="2" id="credit">
+                                        <separator colspan="2" string="Account credit" id="sep_credit"/>
+                                        <label name="ct_account"/>
+                                        <field name="ct_account"/>
+                                        <label name="ct_analytic"/>
+                                        <field name="ct_analytic"/>
+                                        <group col="2" colspan="2" id="analytic_credit">
+                                            <!-- separator colspan="2" string="Credit" id="sep_credit"/ -->
+                                            <label name="ct_analytic_01"/>
+                                            <field name="ct_analytic_01"/>
+                                            <label name="ct_analytic_02"/>
+                                            <field name="ct_analytic_02"/>
+                                            <label name="ct_analytic_03"/>
+                                            <field name="ct_analytic_03"/>
+                                            <label name="ct_analytic_04"/>
+                                            <field name="ct_analytic_04"/>
+                                            <label name="ct_analytic_05"/>
+                                            <field name="ct_analytic_05"/>
+                                            <label name="ct_analytic_06"/>
+                                            <field name="ct_analytic_06"/>
+                                            <label name="ct_analytic_07"/>
+                                            <field name="ct_analytic_07"/>
+                                            <field name="ct_analytic_level" invisible="1"/>
+                                            <field name="ct_analytic_accounts" invisible="1"/>
+                                        </group>
+                                    </group>
+                                    <group col="4" colspan="2" id="product">
+                                        <separator colspan="4" string="Product Information" id="sep_product"/>
+                                        <group col="2" colspan="4" id="product1">
+                                            <label name="product_income"/>
+                                            <field name="product_income" />
+                                            <label name="product_balance_goods"/>
+                                            <field name="product_balance_goods" />
+                                        </group>
+                                        <label name="quantity"/>
+                                        <field name="quantity"/>
+                                        <label name="product_uom"/>
+                                        <field name="product_uom"/>
+                                        <label name="unit_price"/>
+                                        <field name="unit_price"/>
+                                        <field name="unit_digits" invisible="1"/> 
+                                    </group>
+                                    <group col="4" colspan="2" id="amount">
+                                        <separator colspan="4" string="&lt;b&gt;Finance Information&lt;/b&gt;" id="sep_amount"/>
+                                        <group col="2" colspan="2" id="amount">
+                                            <label name="amount"/>
+                                            <field name="amount"/>
+                                            <label name="amount_currency"/>
+                                            <field name="amount_currency"/>
+                                            <label name="currency"/>
+                                            <field name="currency"/>
+                                        </group>
+                                        <group col="2" colspan="2" id="state">
+                                            <label name="state" />
+                                            <field name="state" />
+                                            <group col="2" colspan="2" id="button">
+                                                 <button name="button_post" 
+                                                states="{'invisible': In(Eval('state'), ['posted', 'deleted'])}"
+                                                string="Posted" type="object"/>
+                                                 <button name="button_cancel" 
+                                                states="{'invisible': Not(Equal(Eval('state'), 'posted'))}" 
+                                                string="Cancel" type="object"/>
+                                                 <button name="button_restore" 
+                                                states="{'invisible': Not(Equal(Eval('state'), 'deleted'))}"
+                                                string="Restore" type="object"/>
+                                            </group>
+                                        </group>
+                                    </group>
+                                    </page>
+                                    </notebook>
+                                </form>
+                                <tree string="Account Entry Lines" 
+                                    colors="If(Equal(Eval('state'), 'deleted'),'grey',
+                                            If(Equal(Eval('state'), 'draft'),'blue',
+                                            If(Less(Eval('amount', 0), 0), 'red', 'black')))" >
+                                        <field name="dt_account" />
+                                        <field name="dt_analytic_accounts"/>
+                                        <field name="ct_account" />
+                                        <field name="ct_analytic_accounts"/>
+                                        <field name="amount"/>
+                                        <field name="amount_currency" tree_invisible="1"/>
+                                        <field name="currency" tree_invisible="1"/>
+                                        <field name="state" />
+                                        <field name="product" />
+                                        <field name="quantity"/>
+                                        <field name="product_uom"/>
+                                        <field name="unit_price"/>
+                                        <field name="dt_kind" tree_invisible="1"/>
+                                        <field name="ct_kind" tree_invisible="1"/>
+                                        <field name="dt_kind_analytic" tree_invisible="1"/>
+                                        <field name="ct_kind_analytic" tree_invisible="1"/>
+                                        <field name="dt_type" tree_invisible="1"/>
+                                        <field name="ct_type" tree_invisible="1"/>
+                                        <field name="currency_digits" tree_invisible="1" />
+                                        <field name="second_currency_digits" tree_invisible="1" />
+                                        <field name="unit_digits" tree_invisible="1" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+                ]]>
+            </field>
+    </record>
+
+    <record model="ir.action.act_window" id="act_move_ru_form">
+        <field name="name">Transaction Journal Current period</field>
+        <field name="res_model">ekd.account.move</field>
+        <field name="domain">[('company','=', Get(Eval('context', {}), 'company', False)),
+            ('date_operation','&gt;=', Get(Eval('context', {}), 'start_period', False)),
+            ('date_operation','&lt;=', Get(Eval('context', {}), 'end_period', False))]</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="view_type">form</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_move_ru_form_view1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_move_ru_tree"/>
+        <field name="act_window" ref="act_move_ru_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_move_ru_form_view2">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="view_move_ru_form"/>
+        <field name="act_window" ref="act_move_ru_form"/>
+    </record>
+
+    <menuitem parent="menu_ekd_entries" action="act_move_ru_form"
+                        sequence="10" id="menu_move_ru_form"/>
+
+    <record model="ir.action.act_window" id="act_move_ru_form_all">
+        <field name="name">Transaction Journal All</field>
+        <field name="res_model">ekd.account.move</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('company','=', Get(Eval('context', {}), 'company', False))]</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_move_ru_form_view1_all">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_move_ru_tree"/>
+        <field name="act_window" ref="act_move_ru_form_all"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_move_ru_form_view2_all">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="view_move_ru_form"/>
+        <field name="act_window" ref="act_move_ru_form_all"/>
+    </record>
+
+    <menuitem parent="menu_move_ru_form" action="act_move_ru_form_all"
+                        id="menu_move_ru_form_all"/>
+
+    <record model="ir.model.access" id="access_ru_move">
+        <field name="model" search="[('model', '=', 'ekd.account.move')]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_ru_move_account">
+        <field name="model" search="[('model', '=', 'ekd.account.move')]"/>
+        <field name="group" ref="group_ekd_account"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_ru_move_account_admin">
+        <field name="model" search="[('model', '=', 'ekd.account.move')]"/>
+        <field name="group" ref="group_ekd_account_admin"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="True"/>
+    </record>
+
+    <record model="ir.rule.group" id="rule_group_ekd_account_move">
+        <field name="model" search="[('model', '=', 'ekd.account.move')]"/>
+        <field name="global_p" eval="True"/>
+    </record>
+    <record model="ir.rule" id="rule_ekd_account_move1">
+        <field name="field" search="[('name', '=', 'company'), ('model.model', '=', 'ekd.account.move')]"/>
+        <field name="operator">in</field>
+        <field name="operand">User/Current Companies</field>
+        <field name="rule_group" ref="rule_group_ekd_account_move"/>
+    </record>
+    <record model="ir.rule" id="rule_ekd_account_move2">
+        <field name="field" search="[('name', '=', 'company'), ('model.model', '=', 'ekd.account.move')]"/>
+        <field name="operator">=</field>
+        <field name="operand">False</field>
+        <field name="rule_group" ref="rule_group_ekd_account_move"/>
+    </record>
+
+    <record model="ir.sequence.type" id="sequence_type_ekd_account_move">
+        <field name="name">Account Move (Operation Journal)</field>
+        <field name="code">ekd.account.move.sequence</field>
+        <field name="groups"
+                eval="[('add', ref('res.group_admin')), ('add', ref('group_ekd_account_admin'))]"/>
+    </record>
+    <record model="ir.ui.view" id="print_general_ekd_journal_init_view_form">
+        <field name="model">ekd.account.move.print_general_journal.init</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <![CDATA[
+            <form string="Print General Journal">
+                <label name="from_date"/>
+                <field name="from_date"/>
+                <label name="to_date"/>
+                <field name="to_date"/>
+                <label name="company"/>
+                <field name="company"/>
+                <label name="posted"/>
+                <field name="posted"/>
+            </form>
+            ]]>
+        </field>
+    </record>
+
+    <record model="ir.action.wizard" id="wizard_print_general_ekd_journal">
+        <field name="name">Print General Journal</field>
+        <field name="wiz_name">ekd.account.move.print_general_journal</field>
+    </record>
+    <menuitem parent="menu_ekd_reporting" action="wizard_print_general_ekd_journal"
+            id="menu_print_general_ekd_journal" icon="tryton-print"/>
+
+    <record model="ir.action.report" id="report_general_ekd_journal">
+        <field name="name">General Journal</field>
+        <field name="model">ekd.account.move</field>
+        <field name="report_name">ekd.account.move.general_journal</field>
+        <field name="report">ekd_account/odt/general_journal.odt</field>
+    </record>
+
+    </data>
+</tryton>

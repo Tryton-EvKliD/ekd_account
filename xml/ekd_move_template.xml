@@ -1,1 +1,184 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_move_template.xml
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+    <!--
+         Entries lines - Строки проводок
+    -->
+     <record id="view_move_template_ru_tree" model="ir.ui.view">
+             <field name="model">ekd.account.move.template</field>
+            <field name="type">tree</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Template Entry" >
+                    <field name="company" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="note" select="1"/>
+                    <field name="from_party" />
+                    <field name="to_party" />
+                    <field name="lines"/>
+                    <field name="marker" select="1"/>
+                </tree>
+                ]]>
+            </field>
+    </record>
+
+    <record id="view_move_template_ru_form" model="ir.ui.view">
+            <field name="model">ekd.account.move.template</field>
+            <field name="type">form</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Template Entry" col="8">
+                    <group colspan="4" col="8" id="main_head">
+                        <label name="company" />
+                        <field colspan="1" name="company"/>
+                        <label name="section_acc" />
+                        <field colspan="1" name="section_acc"/>
+                        <label name="marker" />
+                        <field colspan="1" name="marker"/>
+                        <newline/>
+                        <label name="name" string="Description"/>
+                        <field colspan="7" name="name"/>
+                        <newline/>
+<!-->
+                        <separator colspan="8" string="Base for entry" id="sep_entry"/>
+                        <newline/>
+                        <field colspan="8" name="document_ref"/>
+<-->
+                        <label name="active" />
+                        <field colspan="1" name="active"/>
+                        <label name="posted" />
+                        <field colspan="1" name="posted"/>
+                    </group>
+                    <notebook colspan="8">
+                        <page string="Description" id="pg_description" col="8">
+<!-->
+                            <group colspan="6" col="6" id="documents">
+                                <separator colspan="6" string="Base for party" id="sep_party"/>
+                                <field colspan="6" name="document2_ref"/>
+                            </group>
+<-->
+                            <group col="8" colspan="8" id="party">
+                                <label name="from_party"/>
+                                <field colspan="1" name="from_party"/>
+                                <label name="to_party"/>
+                                <field colspan="1" name="to_party"/>
+                            </group>
+                            <group col="8" colspan="8" id="note">
+                                <group col="6" colspan="6" id="grp_note">
+                                    <separator colspan="6" string="Note" id="sep_note"/>
+                                    <field colspan="6" name="note"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Entry Lines" id="pg_line" col="8">
+                            <field name="lines" colspan="8">
+                                <form string="Account Entry Lines" col="4">
+                                    <field name="dt_kind" invisible="1"/>
+                                    <field name="dt_kind_analytic" invisible="1"/>
+                                    <field name="ct_kind" invisible="1"/>
+                                    <field name="ct_kind_analytic" invisible="1"/>
+                                    <group col="4" colspan="4" id="debit">
+                                        <label name="code_line"/>
+                                        <field name="code_line"/>
+                                    </group>
+                                    <group col="2" colspan="2" id="debit">
+                                        <separator colspan="2" string="Account debit" id="sep_debit"/>
+                                        <label name="dt_account"/>
+                                        <field name="dt_account"/>
+                                        <label name="dt_analytic" />
+                                        <field name="dt_analytic"/>
+                                    </group>
+                                    <group col="2" colspan="2" id="credit">
+                                        <separator colspan="2" string="Account credit" id="sep_credit"/>
+                                        <label name="ct_account"/>
+                                        <field name="ct_account"/>
+                                        <label name="ct_analytic"/>
+                                        <field name="ct_analytic"/>
+                                    </group>
+                                    <group col="2" colspan="4" id="amount">
+                                        <separator colspan="2" string="Formula for compute" id="sep_amount"/>
+                                        <field name="amount"/>
+                                        <newline/>
+                                        <button colspan="2" string="Test formula" name="button_test" type="object"/>
+                                    </group>
+                                </form>
+                                <tree string="Account Entry Lines" >
+                                        <field name="code_line"/>
+                                        <field name="dt_account" />
+                                        <field name="dt_party" />
+                                        <field name="ct_account" />
+                                        <field name="ct_party" />
+                                        <field name="amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+                ]]>
+            </field>
+    </record>
+
+    <record model="ir.action.act_window" id="act_move_template_ru_form">
+        <field name="name">Templates Entries</field>
+        <field name="res_model">ekd.account.move.template</field>
+        <field name="view_type">form</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_move_template_ru_form_view1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_move_template_ru_tree"/>
+        <field name="act_window" ref="act_move_template_ru_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_move_template_ru_form_view2">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="view_move_template_ru_form"/>
+        <field name="act_window" ref="act_move_template_ru_form"/>
+    </record>
+
+    <menuitem parent="menu_ekd_account_configuration" action="act_move_template_ru_form"
+                        id="menu_move_template_ru_form"/>
+
+    <record model="ir.model.access" id="access_ru_move_template">
+        <field name="model" search="[('model', '=', 'ekd.account.move.template')]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_ru_move_template_account">
+        <field name="model" search="[('model', '=', 'ekd.account.move.template')]"/>
+        <field name="group" ref="group_ekd_account"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.model.access" id="access_ru_move_template_account_admin">
+        <field name="model" search="[('model', '=', 'ekd.account.move.template')]"/>
+        <field name="group" ref="group_ekd_account_admin"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_delete" eval="True"/>
+    </record>
+
+    <record model="ir.rule.group" id="rule_group_ekd_account_move_template">
+        <field name="model" search="[('model', '=', 'ekd.account.move.template')]"/>
+        <field name="global_p" eval="True"/>
+    </record>
+    <record model="ir.rule" id="rule_ekd_account_move_template1">
+        <field name="field" search="[('name', '=', 'company'), ('model.model', '=', 'ekd.account.move.template')]"/>
+        <field name="operator">in</field>
+        <field name="operand">User/Current Companies</field>
+        <field name="rule_group" ref="rule_group_ekd_account_move_template"/>
+    </record>
+    <record model="ir.rule" id="rule_ekd_account_move_template2">
+        <field name="field" search="[('name', '=', 'company'), ('model.model', '=', 'ekd.account.move.template')]"/>
+        <field name="operator">=</field>
+        <field name="operand">False</field>
+        <field name="rule_group" ref="rule_group_ekd_account_move_template"/>
+    </record>
+
+    </data>
+</tryton>

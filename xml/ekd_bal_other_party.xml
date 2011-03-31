@@ -1,1 +1,31 @@
-/home/trytond-1.8.2/trytond/modules/ekd_account/xml/ekd_bal_other_party.xml
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+        <!--
+      Формы для бухгалтерии
+      2. В разрезе контрагентов Прочие Деб-Кред.
+    -->
+
+    <record model="ir.action.act_window" id="act_balances_other_partner_form">
+        <field name="name">Balance and Turnover Accounts (Other Partner)</field>
+        <field name="res_model">ekd.balances.party</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('account.kind_analytic', '=', 'party'), ('company','=', Get(Eval('context', {}), 'company', False))]</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_other_partner_form_view1">
+        <field name="sequence" eval="10"/>
+        <field name="view" ref="view_balances_party_tree"/>
+        <field name="act_window" ref="act_balances_other_partner_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_balances_other_partner_form_view2">
+        <field name="sequence" eval="20"/>
+        <field name="view" ref="view_balances_party_form"/>
+        <field name="act_window" ref="act_balances_other_partner_form"/>
+    </record>
+
+    <menuitem parent="menu_balances_party_form" action="act_balances_other_partner_form"
+                        id="menu_balances_other_partner_form"/>
+
+    </data>
+</tryton>
